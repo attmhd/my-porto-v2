@@ -4,6 +4,7 @@ import {
   SiPytorch,
   SiFastapi,
   SiDocker,
+  SiMlflow,
   SiKubernetes,
   SiPostgresql,
   SiMongodb,
@@ -87,24 +88,32 @@ export const PROJECTS: Project[] = [
     technologies: ["Vite JS", "Supabase", "Gamification"],
     image: "https://picsum.photos/600/400?random=13",
     category: "Backend",
+    demoUrl: "https://ml.natta.studio",
   },
 ];
 
 export const TECH_STACK: TechStackItem[] = [
+  // Language
   { name: "Python", icon: SiPython, category: "Language" },
-  { name: "C++", icon: SiCplusplus, category: "Language" },
   { name: "Go", icon: SiGo, category: "Language" },
+  { name: "C++", icon: SiCplusplus, category: "Language" },
+
+  // Framework
   { name: "FastAPI", icon: SiFastapi, category: "Framework" },
-  { name: "Docker", icon: SiDocker, category: "Tool" },
-  { name: "DigitalOcean", icon: SiDigitalocean, category: "Cloud" },
   { name: "TensorFlow", icon: SiTensorflow, category: "Framework" },
+  { name: "Scikit-learn", icon: SiScikitlearn, category: "Framework" },
+
+  // Tool
+  { name: "MySQL", icon: SiMysql, category: "Tool" },
   { name: "PostgreSQL", icon: SiPostgresql, category: "Tool" },
   { name: "Redis", icon: SiRedis, category: "Tool" },
-  { name: "Laravel", icon: SiLaravel, category: "Framework" },
-  { name: "MySQL", icon: SiMysql, category: "Tool" },
-  { name: "Supabase", icon: SiSupabase, category: "Cloud" },
   { name: "Git", icon: SiGit, category: "Tool" },
-  { name: "Scikit-learn", icon: SiScikitlearn, category: "Framework" },
+  { name: "MLflow", icon: SiMlflow, category: "Tool" },
+  { name: "Docker", icon: SiDocker, category: "Tool" },
+
+  // Cloud
+  { name: "DigitalOcean", icon: SiDigitalocean, category: "Cloud" },
+  { name: "Supabase", icon: SiSupabase, category: "Cloud" },
 ];
 
 export const EDUCATION: Education[] = [
@@ -148,27 +157,27 @@ export const CERTIFICATES: Certificate[] = [
     name: "Dev Certified for ML with TensorFlow",
     issuer: "TensorFlow",
     date: "2024",
-    url: "#",
+    url: "https://dev.id/certificate/verify/JE0P36LW75",
   },
   {
     id: "2",
     name: "Generative AI with Large Language Models",
     issuer: "Coursera",
     date: "2024",
-    url: "#",
+    url: "https://www.coursera.org/account/accomplishments/verify/RVKFMTBY5JRZ?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course",
   },
   {
     id: "3",
     name: "ITS Python Certification",
     issuer: "Certiport",
     date: "2025",
-    url: "#",
+    url: "https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&format=pdf&id=471",
   },
   {
     id: "4",
     name: "Meta x Hacktiv8",
     issuer: "Meta",
     date: "2024",
-    url: "#",
+    url: "https://drive.google.com/file/d/1SOGBYdkDcCbplU8QIQl39bfZ6fyml4Tu/view",
   },
 ];
