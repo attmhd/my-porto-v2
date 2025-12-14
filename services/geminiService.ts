@@ -1,7 +1,13 @@
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
-import { USER_INFO, PROJECTS, TECH_STACK, EDUCATION, CERTIFICATES } from '../constants';
+import {
+  USER_INFO,
+  PROJECTS,
+  TECH_STACK,
+  EDUCATION,
+  CERTIFICATES,
+} from "../constants";
 
-const API_KEY = process.env.API_KEY || '';
+const API_KEY = process.env.API_KEY || "";
 
 // System instruction to give the AI context about the persona
 const SYSTEM_INSTRUCTION = `
@@ -14,10 +20,10 @@ About: ${USER_INFO.about}
 Location: ${USER_INFO.location}
 Contact: ${USER_INFO.email}
 
-Tech Stack: ${TECH_STACK.map(t => t.name).join(', ')}.
-Projects: ${PROJECTS.map(p => `${p.title} (${p.category}): ${p.description}`).join('; ')}.
-Education: ${EDUCATION.map(e => `${e.degree} from ${e.institution}`).join('; ')}.
-Certificates: ${CERTIFICATES.map(c => c.name).join(', ')}.
+Tech Stack: ${TECH_STACK.map((t) => t.name).join(", ")}.
+Projects: ${PROJECTS.map((p) => `${p.title} (${p.category}): ${p.description}`).join("; ")}.
+Education: ${EDUCATION.map((e) => `${e.degree} from ${e.institution}`).join("; ")}.
+Certificates: ${CERTIFICATES.map((c) => c.name).join(", ")}.
 
 Tone: Professional, enthusiastic, concise, and helpful.
 If asked about hiring, encourage them to contact via email.
@@ -35,9 +41,9 @@ export const initializeChat = (): Chat => {
   }
 
   const ai = new GoogleGenAI({ apiKey: API_KEY });
-  
+
   chatSession = ai.chats.create({
-    model: 'gemini-2.5-flash',
+    model: "gemini-2.5-flash",
     config: {
       systemInstruction: SYSTEM_INSTRUCTION,
       temperature: 0.7,
@@ -47,12 +53,14 @@ export const initializeChat = (): Chat => {
   return chatSession;
 };
 
-export const sendMessageToGemini = async (message: string): Promise<AsyncIterable<GenerateContentResponse>> => {
+export const sendMessageToGemini = async (
+  message: string,
+): Promise<AsyncIterable<GenerateContentResponse>> => {
   if (!chatSession) {
     try {
       chatSession = initializeChat();
     } catch (error) {
-       throw new Error("Chat not initialized. Check API Key.");
+      throw new Error("Chat not initialized. Check API Key.");
     }
   }
 
