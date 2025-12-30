@@ -35,7 +35,7 @@ export const USER_INFO = {
   location: "Padang City, Indonesia",
   email: "attmhd2.work@gmail.com",
   cvUrl:
-    "https://drive.google.com/file/d/1B2eEk8B80mII3wTrOTfY6rEaPrkSOWFH/view?usp=sharing",
+    "https://drive.google.com/file/d/1rAy-W5Iwpblkn9d4qyxdDuk1eABbZaZA/view?usp=sharing",
 };
 
 export const PROJECTS: Project[] = [
@@ -122,8 +122,7 @@ export const EDUCATION: Education[] = [
     institution: "Natta Studio",
     degree: "Founder & Product Developer",
     year: "2025",
-    description:
-      "Building AI-powered applications and products.",
+    description: "Building AI-powered applications and products.",
   },
   {
     id: "2",
