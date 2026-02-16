@@ -1,4 +1,4 @@
-import { IconType } from 'react-icons';
+import { IconType } from "react-icons";
 
 export interface Project {
   id: string;
@@ -8,7 +8,7 @@ export interface Project {
   githubUrl?: string;
   demoUrl?: string;
   image: string;
-  category: 'AI/ML' | 'Backend' | 'Data Science';
+  category: "AI/ML" | "Backend" | "Data Science" | "DevOps" | "System Design";
 }
 
 export interface Education {
@@ -30,11 +30,11 @@ export interface Certificate {
 export interface TechStackItem {
   name: string;
   icon: IconType;
-  category: 'Language' | 'Framework' | 'Tool' | 'Cloud';
+  category: "Language" | "Framework" | "Tool" | "Cloud";
 }
 
 export interface ChatMessage {
-  role: 'user' | 'model';
+  role: "user" | "model";
   text: string;
   timestamp: Date;
 }

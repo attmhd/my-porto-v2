@@ -1,52 +1,115 @@
 import React from "react";
 import { USER_INFO } from "../constants";
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 
 const Footer: React.FC = () => {
-  return (
-    <footer className="bg-black py-12 border-t border-gray-900">
-      <div className="container mx-auto px-6 text-center">
-        <h2 className="text-2xl font-display font-bold text-white mb-6">
-          Let's Work Together
-        </h2>
-        <p className="text-gray-400 max-w-lg mx-auto mb-8">
-          Currently open for new opportunities in AI Backend Development.
-        </p>
-        <a
-          href={`mailto:${USER_INFO.email}`}
-          className="inline-block px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors"
-        >
-          Say Hello
-        </a>
+  const profileLinks = [
+    {
+      label: "Credly",
+      url: "https://www.credly.com/users/muhammad-attan",
+    },
+    {
+      label: "Dicoding",
+      url: "https://www.dicoding.com/users/attmhd/academies",
+    },
+    {
+      label: "GCSB",
+      url: "https://www.skills.google/public_profiles/62eefc35-bccb-4fc5-924c-a0bf56db282d?locale=id",
+    },
+    {
+      label: "Medium",
+      url: "https://attmhd.medium.com/",
+    },
+  ];
 
-        <div className="mt-16 pt-8 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-          <p>
-            &copy; {new Date().getFullYear()} {USER_INFO.name}. All rights
-            reserved.
+  return (
+    <footer className="bg-gray-50/80 dark:bg-black border-t border-gray-200/60 dark:border-white/[0.06]">
+      {/* CTA Section */}
+      <div className="container mx-auto px-6 py-20">
+        <div className="max-w-3xl">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="font-mono text-sm text-primary tracking-wide">
+              &gt; contact
+            </span>
+            <span className="h-px flex-1 bg-gray-200 dark:bg-white/10 max-w-[120px]" />
+          </div>
+
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+            Let's Work Together
+          </h2>
+          <p className="text-gray-500 dark:text-gray-500 max-w-lg mb-8">
+            Currently open for new opportunities in AI and Backend Engineering.
+            Let's build something meaningful.
           </p>
-          <div className="flex gap-6 mt-4 md:mt-0">
+
+          <div className="flex flex-wrap items-center gap-4">
             <a
-              href="https://www.credly.com/users/muhammad-attan"
-              target="_blank"
+              href={`mailto:${USER_INFO.email}`}
+              className="px-7 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-semibold rounded-full hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
             >
-              <span className="cursor-pointer hover:text-gray-400">Credly</span>
+              Say Hello
             </a>
-            <a
-              href="https://www.dicoding.com/users/attmhd/academies"
-              target="_blank"
-            >
-              <span className="cursor-pointer hover:text-gray-400">
-                Dicoding
+            <span className="text-sm font-mono text-gray-400 dark:text-gray-600">
+              {USER_INFO.email}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="border-t border-gray-200/60 dark:border-white/[0.06]">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            {/* Left: Copyright + Social */}
+            <div className="flex flex-col gap-4">
+              <p className="text-sm text-gray-400 dark:text-gray-600">
+                &copy; {new Date().getFullYear()} {USER_INFO.name}
+              </p>
+              <div className="flex items-center gap-5 text-base text-gray-400 dark:text-gray-700">
+                <a
+                  href="https://github.com/attmhd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <FaGithub />
+                </a>
+                <a
+                  href="https://linkedin.com/in/attmhd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <FaLinkedin />
+                </a>
+                <a
+                  href={`mailto:${USER_INFO.email}`}
+                  className="hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <FaEnvelope />
+                </a>
+              </div>
+            </div>
+
+            {/* Right: Profile links */}
+            <div className="flex flex-col items-start md:items-end gap-3">
+              <span className="text-[11px] font-mono text-gray-400 dark:text-gray-700 uppercase tracking-wider">
+                Profiles
               </span>
-            </a>
-            <a
-              href="https://www.skills.google/public_profiles/62eefc35-bccb-4fc5-924c-a0bf56db282d?locale=id"
-              target="_blank"
-            >
-              <span className="cursor-pointer hover:text-gray-400">GCSB</span>
-            </a>
-            <a href="https://attmhd.medium.com/" target="_blank">
-              <span className="cursor-pointer hover:text-gray-400">Medium</span>
-            </a>
+              <div className="flex flex-wrap gap-x-5 gap-y-1.5">
+                {profileLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

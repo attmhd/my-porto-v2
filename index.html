@@ -15,6 +15,7 @@
         />
         <script>
             tailwind.config = {
+                darkMode: "class",
                 theme: {
                     extend: {
                         fontFamily: {
@@ -22,16 +23,57 @@
                             display: ["Space Grotesk", "sans-serif"],
                         },
                         colors: {
-                            background: "#0a0a0a",
-                            surface: "#121212",
+                            background: {
+                                DEFAULT: "#f8fafc", // Slate 50 for light mode
+                                dark: "#0a0a0a", // Original dark mode
+                            },
+                            surface: {
+                                DEFAULT: "#ffffff", // White for light mode
+                                dark: "#121212", // Original dark mode
+                            },
                             primary: "#3b82f6", // Blue 500
                             secondary: "#8b5cf6", // Violet 500
                             accent: "#06b6d4", // Cyan 500
+                            // Add specific text colors for better control if needed,
+                            // but we will mostly use standard tailwind text- colors
                         },
                         animation: {
                             blob: "blob 7s infinite",
+                            marquee: "marquee 30s linear infinite",
+                            "marquee-reverse":
+                                "marquee-reverse 30s linear infinite",
+                            "fade-in": "fadeIn 0.5s ease-in-out forwards",
+                            "fade-out": "fadeOut 0.5s ease-in-out forwards",
                         },
                         keyframes: {
+                            fadeIn: {
+                                "0%": {
+                                    opacity: "0",
+                                    transform: "translateY(8px)",
+                                },
+                                "100%": {
+                                    opacity: "1",
+                                    transform: "translateY(0)",
+                                },
+                            },
+                            fadeOut: {
+                                "0%": {
+                                    opacity: "1",
+                                    transform: "translateY(0)",
+                                },
+                                "100%": {
+                                    opacity: "0",
+                                    transform: "translateY(-8px)",
+                                },
+                            },
+                            marquee: {
+                                "0%": { transform: "translateX(0%)" },
+                                "100%": { transform: "translateX(-50%)" },
+                            },
+                            "marquee-reverse": {
+                                "0%": { transform: "translateX(-50%)" },
+                                "100%": { transform: "translateX(0%)" },
+                            },
                             blob: {
                                 "0%": {
                                     transform: "translate(0px, 0px) scale(1)",
@@ -54,23 +96,39 @@
             };
         </script>
         <style>
-            body {
-                background-color: #0a0a0a;
-                color: #e5e5e5;
-            }
             /* Custom Scrollbar */
             ::-webkit-scrollbar {
                 width: 8px;
             }
+
             ::-webkit-scrollbar-track {
                 background: #0a0a0a;
             }
+
             ::-webkit-scrollbar-thumb {
                 background: #333;
                 border-radius: 4px;
             }
+
             ::-webkit-scrollbar-thumb:hover {
                 background: #555;
+            }
+
+            /* Dot grid background */
+            .bg-dot-grid {
+                background-image: radial-gradient(
+                    circle,
+                    rgba(148, 163, 184, 0.15) 1px,
+                    transparent 1px
+                );
+                background-size: 24px 24px;
+            }
+            .dark .bg-dot-grid {
+                background-image: radial-gradient(
+                    circle,
+                    rgba(255, 255, 255, 0.04) 1px,
+                    transparent 1px
+                );
             }
         </style>
         <script type="importmap">
@@ -87,7 +145,10 @@
             }
         </script>
     </head>
-    <body>
+
+    <body
+        class="bg-background text-gray-900 dark:bg-background-dark dark:text-gray-100 transition-colors duration-300"
+    >
         <div id="root"></div>
         <script type="module" src="/index.tsx"></script>
     </body>

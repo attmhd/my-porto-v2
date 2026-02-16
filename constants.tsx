@@ -23,6 +23,13 @@ import {
   SiLaravel,
   SiMysql,
   SiCplusplus,
+  SiGin,
+  SiPrometheus,
+  SiGrafana,
+  SiApachekafka,
+  SiRabbitmq,
+  SiAnsible,
+  SiTerraform,
 } from "react-icons/si";
 import { Project, Education, Certificate, TechStackItem } from "./types";
 
@@ -32,10 +39,10 @@ export const USER_INFO = {
   tagline: "Building scalable RAG pipelines and AI-driven backend systems.",
   about:
     "I am a final-year Informatics Engineering student specializing in Backend Development and Artificial Intelligence. Experienced in building RAG pipelines, developing ML models, and deploying backend services using FastAPI, Docker, and DigitalOcean. I bridge the gap between complex AI models and production-ready applications.",
-  location: "Padang City, Indonesia",
+  location: "Padang, Indonesia",
   email: "attmhd2.work@gmail.com",
   cvUrl:
-    "https://drive.google.com/file/d/1rAy-W5Iwpblkn9d4qyxdDuk1eABbZaZA/view?usp=sharing",
+    "https://drive.google.com/file/d/1y06mSJHPdsBTOWoLf3dHDKhRPYwJ4JPu/view?usp=sharing",
 };
 
 export const PROJECTS: Project[] = [
@@ -90,6 +97,194 @@ export const PROJECTS: Project[] = [
     category: "Backend",
     demoUrl: "https://ml.natta.studio",
   },
+  {
+    id: "5",
+    title: "Baso.AI",
+    description: "AI-powered platform for learning Minang Language.",
+    technologies: ["Vibe Coding", "Gemini"],
+    image: "https://picsum.photos/600/400?random=14",
+    category: "AI/ML",
+    demoUrl: "#",
+  },
+  {
+    id: "6",
+    title: "Onlyfriends",
+    description: "Chat web-based to talk with random people.",
+    technologies: ["Golang", "Web Socket", "LLM"],
+    image: "https://picsum.photos/600/400?random=15",
+    category: "Backend",
+    demoUrl: "https://ml.natta.studio",
+  },
+  {
+    id: "7",
+    title: "FamGPS",
+    description: "GPS-based platform for tracking family members.",
+    technologies: ["Golang", "Kafka"],
+    image: "https://picsum.photos/600/400?random=16",
+    category: "Backend",
+    demoUrl: "https://ml.natta.studio",
+  },
+  {
+    id: "8",
+    title: "Order Processing Microservices",
+    description:
+      "Distributed backend with gRPC-based service-to-service communication and RabbitMQ as an event bus for order, payment, and inventory workflows. Ensures reliable processing with dead-letter queues and retry policies.",
+    technologies: [
+      "Golang",
+      "gRPC",
+      "RabbitMQ",
+      "Docker",
+      "PostgreSQL",
+      "Redis",
+    ],
+    image: "https://picsum.photos/600/400?random=17",
+    category: "Backend",
+    demoUrl: "#",
+  },
+  {
+    id: "9",
+    title: "Realtime Notification Service",
+    description:
+      "Notification aggregator that consumes events from RabbitMQ and dispatches messages via WebSocket and email. Uses gRPC for internal RPC between gateway and notifier services.",
+    technologies: ["Golang", "FastAPI", "gRPC", "RabbitMQ", "Redis", "Docker"],
+    image: "https://picsum.photos/600/400?random=18",
+    category: "Backend",
+    demoUrl: "#",
+  },
+  {
+    id: "10",
+    title: "Media Processing Pipeline",
+    description:
+      "Asynchronous image/video processing pipeline. Upload service publishes jobs to RabbitMQ; worker services expose gRPC endpoints for transcoding, thumbnailing, and metadata extraction.",
+    technologies: [
+      "Python",
+      "gRPC",
+      "RabbitMQ",
+      "MLflow",
+      "Docker",
+      "PostgreSQL",
+    ],
+    image: "https://picsum.photos/600/400?random=19",
+    category: "Backend",
+    demoUrl: "#",
+  },
+  {
+    id: "11",
+    title: "CI/CD Pipeline with Jenkins",
+    description:
+      "Design and implement a simple CI/CD pipeline for a microservice. Uses Jenkins to run build, test, and Docker image publishing steps, then deploys to a staging server. Includes branch-based pipelines and webhook integrations.",
+    technologies: ["Jenkins", "GitHub Actions", "Docker", "FastAPI", "Redis"],
+    image: "https://picsum.photos/600/400?random=20",
+    category: "DevOps",
+    demoUrl: "#",
+  },
+  {
+    id: "12",
+    title: "Infrastructure as Code with Terraform",
+    description:
+      "Provision cloud infrastructure using Terraform. Automates creation of VPC, compute instances, security groups, and managed databases. Supports multiple environments (dev/staging) with reusable modules.",
+    technologies: ["Terraform", "DigitalOcean", "AWS", "PostgreSQL", "Docker"],
+    image: "https://picsum.photos/600/400?random=21",
+    category: "DevOps",
+    demoUrl: "#",
+  },
+  {
+    id: "13",
+    title: "Configuration Management with Ansible",
+    description:
+      "Use Ansible to automate server configuration and application deployment. Playbooks set up users, firewall rules, Docker runtime, and deploy a FastAPI service with environment templating and rolling updates.",
+    technologies: ["Ansible", "FastAPI", "Docker", "Nginx", "Ubuntu Server"],
+    image: "https://picsum.photos/600/400?random=22",
+    category: "DevOps",
+    demoUrl: "#",
+  },
+  {
+    id: "14",
+    title: "API Gateway with Rate Limiting & Auth",
+    description:
+      "Design and implement an API gateway that centralizes authentication, authorization, request throttling, and request/response transformation. Supports JWT-based auth, per-tenant rate limits, and circuit breakers for downstream services.",
+    technologies: ["Golang", "Envoy", "Redis", "JWT", "Docker", "OpenAPI"],
+    image: "https://picsum.photos/600/400?random=23",
+    category: "System Design",
+    demoUrl: "#",
+  },
+  {
+    id: "15",
+    title: "CQRS + Event Sourcing Order System",
+    description:
+      "Split read/write paths using CQRS, persist business events, and rebuild read models asynchronously. Includes idempotent command handling, snapshotting, and eventual consistency guarantees.",
+    technologies: ["Golang", "PostgreSQL", "Kafka", "Protobuf", "Docker"],
+    image: "https://picsum.photos/600/400?random=24",
+    category: "System Design",
+    demoUrl: "#",
+  },
+  {
+    id: "16",
+    title: "Distributed Caching Layer",
+    description:
+      "Design a multi-tier cache (in-memory + Redis) with cache-aside and write-through strategies. Includes cache invalidation, TTL policies, and hot-key mitigation via sharding.",
+    technologies: ["Golang", "Redis", "Nginx", "Docker", "Prometheus"],
+    image: "https://picsum.photos/600/400?random=25",
+    category: "System Design",
+    demoUrl: "#",
+  },
+  {
+    id: "17",
+    title: "Observability Stack: Metrics, Logs, Traces",
+    description:
+      "Unified observability for microservices using OpenTelemetry. Exposes RED/USE metrics, structured logs, and distributed traces. Includes SLO dashboards and alerting on latency/availability.",
+    technologies: [
+      "OpenTelemetry",
+      "Prometheus",
+      "Grafana",
+      "Loki",
+      "Tempo",
+      "Golang",
+    ],
+    image: "https://picsum.photos/600/400?random=26",
+    category: "DevOps",
+    demoUrl: "#",
+  },
+  {
+    id: "18",
+    title: "Resilient Message Processing",
+    description:
+      "Design a robust consumer that handles poison messages with dead-letter queues, retries with backoff, and exactly-once processing using deduplication keys and transactional outbox pattern.",
+    technologies: ["RabbitMQ", "PostgreSQL", "Golang", "Docker"],
+    image: "https://picsum.photos/600/400?random=27",
+    category: "System Design",
+    demoUrl: "#",
+  },
+  {
+    id: "19",
+    title: "Multi-tenant SaaS Architecture",
+    description:
+      "Build a SaaS backend supporting both pooled and siloed tenancy. Includes tenant-aware routing, per-tenant rate limits, data isolation, and billing events.",
+    technologies: ["Golang", "PostgreSQL", "Redis", "Nginx", "Docker"],
+    image: "https://picsum.photos/600/400?random=28",
+    category: "Backend",
+    demoUrl: "#",
+  },
+  {
+    id: "20",
+    title: "Search Service with Sharding & Replication",
+    description:
+      "Design a search cluster that shards indexes by tenant and replicates for high availability. Implements leader election, read/write routing, and failover.",
+    technologies: ["Elasticsearch", "Golang", "ZooKeeper", "Docker"],
+    image: "https://picsum.photos/600/400?random=29",
+    category: "System Design",
+    demoUrl: "#",
+  },
+  {
+    id: "21",
+    title: "Media CDN with Edge Caching",
+    description:
+      "Edge-optimized media delivery pipeline. Origin server signs URLs, edge proxies cache content, and invalidation propagates via pub/sub. Includes rate limiting and token-based access.",
+    technologies: ["Nginx", "Redis", "Golang", "RabbitMQ", "Docker"],
+    image: "https://picsum.photos/600/400?random=30",
+    category: "System Design",
+    demoUrl: "#",
+  },
 ];
 
 export const TECH_STACK: TechStackItem[] = [
@@ -97,9 +292,11 @@ export const TECH_STACK: TechStackItem[] = [
   { name: "Python", icon: SiPython, category: "Language" },
   { name: "Go", icon: SiGo, category: "Language" },
   { name: "C++", icon: SiCplusplus, category: "Language" },
+  { name: "Typescript", icon: SiTypescript, category: "Language" },
 
   // Framework
   { name: "FastAPI", icon: SiFastapi, category: "Framework" },
+  { name: "Gin Gonic", icon: SiGin, category: "Framework" },
   { name: "TensorFlow", icon: SiTensorflow, category: "Framework" },
   { name: "Scikit-learn", icon: SiScikitlearn, category: "Framework" },
 
@@ -110,20 +307,21 @@ export const TECH_STACK: TechStackItem[] = [
   { name: "Git", icon: SiGit, category: "Tool" },
   { name: "MLflow", icon: SiMlflow, category: "Tool" },
   { name: "Docker", icon: SiDocker, category: "Tool" },
+  { name: "Prometheus", icon: SiPrometheus, category: "Tool" },
+  { name: "Grafana", icon: SiGrafana, category: "Tool" },
+  { name: "Kafka", icon: SiApachekafka, category: "Tool" },
+  { name: "RabbitMQ", icon: SiRabbitmq, category: "Tool" },
+  { name: "Ansible", icon: SiAnsible, category: "Tool" },
+  { name: "Kubernetes", icon: SiKubernetes, category: "Tool" },
+  { name: "Terraform", icon: SiTerraform, category: "Tool" },
 
   // Cloud
+  { name: "AWS", icon: SiAmazon, category: "Cloud" },
   { name: "DigitalOcean", icon: SiDigitalocean, category: "Cloud" },
   { name: "Supabase", icon: SiSupabase, category: "Cloud" },
 ];
 
 export const EDUCATION: Education[] = [
-  {
-    id: "1",
-    institution: "Natta Studio",
-    degree: "Founder & Product Developer",
-    year: "2025",
-    description: "Building AI-powered applications and products.",
-  },
   {
     id: "2",
     institution: "Appskep Indonesia",

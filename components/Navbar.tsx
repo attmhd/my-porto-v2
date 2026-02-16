@@ -1,101 +1,131 @@
-import React, { useState } from "react";
-import { FaDownload, FaBars, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaDownload, FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
 import { USER_INFO } from "../constants";
+import { useTheme } from "../contexts/ThemeContext";
+
+const navLinks = [
+  { href: "#home", label: "Home" },
+  { href: "#projects", label: "Projects" },
+  { href: "#experience", label: "Experience" },
+  { href: "https://blog.attmhd.me", label: "Blog", external: true },
+];
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const handleLinkClick = () => setIsMobileMenuOpen(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const closeMobile = () => setIsMobileMenuOpen(false);
+
+  const linkProps = (link: (typeof navLinks)[0]) =>
+    link.external
+      ? { target: "_blank" as const, rel: "noopener noreferrer" }
+      : {};
 
   return (
-    <nav className="fixed top-6 left-0 right-0 z-50 flex flex-col items-center pointer-events-none px-4">
-      {/* Container Utama (Pill) */}
-      <div className="bg-black/80 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 pointer-events-auto shadow-2xl shadow-primary/10 transition-all hover:border-white/20 w-full max-w-xs md:max-w-fit md:px-8 md:py-4">
-        {/* A. Desktop Menu Layout (Hidden on Mobile) */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-          <a href="#home" className="hover:text-white transition-colors">
-            Home
-          </a>
-          <a href="#experience" className="hover:text-white transition-colors">
-            Experience
-          </a>
-          <a href="#projects" className="hover:text-white transition-colors">
-            Projects
-          </a>
-          <a
-            href="https://blog.attmhd.me"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors"
-          >
-            Blog
-          </a>
-          <a
-            href={USER_INFO.cvUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-white bg-white/10 px-4 py-1.5 rounded-full hover:bg-white hover:text-black transition-all group"
-          >
-            <span>Download CV</span>
-            <FaDownload className="text-xs group-hover:animate-bounce" />
-          </a>
-        </div>
+    <nav className="fixed top-5 left-0 right-0 z-50 flex flex-col items-center pointer-events-none px-4">
+      {/* Pill */}
+      <div
+        className={`pointer-events-auto rounded-full px-5 py-2.5 md:px-6 md:py-2.5 transition-all duration-300 w-full max-w-xs md:max-w-fit ${
+          scrolled
+            ? "bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.08] shadow-sm"
+            : "bg-white/50 dark:bg-black/50 backdrop-blur-md border border-gray-200/30 dark:border-white/[0.04]"
+        }`}
+      >
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-6 text-[13px] font-medium text-gray-500 dark:text-gray-500">
+          {navLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              {...linkProps(link)}
+              className="hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              {link.label}
+            </a>
+          ))}
 
-        {/* B. Mobile Header Layout (Visible only on Mobile) */}
-        <div className="flex md:hidden items-center justify-between w-full">
-          {/* Tombol Hamburger / Close */}
+          <span className="h-3.5 w-px bg-gray-200 dark:bg-white/10" />
+
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-white p-1 focus:outline-none"
+            onClick={toggleTheme}
+            className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white"
+            aria-label="Toggle theme"
           >
-            {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            {theme === "dark" ? (
+              <FaSun className="text-sm" />
+            ) : (
+              <FaMoon className="text-sm" />
+            )}
           </button>
 
-          {/* Tombol CV (Versi Mini untuk Mobile) */}
           <a
             href={USER_INFO.cvUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-white bg-white/10 px-4 py-1.5 rounded-full text-xs hover:bg-white hover:text-black transition-all"
+            className="flex items-center gap-1.5 text-[13px] font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-white/[0.08] px-4 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-white/[0.15] transition-colors"
           >
-            <span>CV</span>
+            CV
             <FaDownload className="text-[10px]" />
           </a>
         </div>
-      </div>
 
-      {/* C. Mobile Dropdown Menu (Muncul saat state Open) */}
-      {isMobileMenuOpen && (
-        <div className="mt-4 pointer-events-auto w-full max-w-xs md:hidden animate-in fade-in slide-in-from-top-5 duration-200">
-          <div className="bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col gap-4 text-center text-sm font-medium text-gray-300 shadow-2xl">
-            <a
-              href="#home"
-              onClick={handleLinkClick}
-              className="py-2 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+        {/* Mobile */}
+        <div className="flex md:hidden items-center justify-between w-full">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="text-gray-500 dark:text-gray-400 p-1 focus:outline-none hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            {isMobileMenuOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
+          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-gray-400 dark:text-gray-500"
+              aria-label="Toggle theme"
             >
-              Home
-            </a>
+              {theme === "dark" ? (
+                <FaSun className="text-sm" />
+              ) : (
+                <FaMoon className="text-sm" />
+              )}
+            </button>
+
             <a
-              href="#experience"
-              onClick={handleLinkClick}
-              className="py-2 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-            >
-              Experience
-            </a>
-            <a
-              href="#projects"
-              onClick={handleLinkClick}
-              className="py-2 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-            >
-              Projects
-            </a>
-            <a
-              href="https://blog.attmhd.me"
+              href={USER_INFO.cvUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+              className="flex items-center gap-1.5 text-[12px] font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-white/[0.08] px-3 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-white/[0.15] transition-colors"
             >
-              Blog
+              CV
+              <FaDownload className="text-[9px]" />
             </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile dropdown */}
+      {isMobileMenuOpen && (
+        <div className="mt-3 pointer-events-auto w-full max-w-xs md:hidden">
+          <div className="bg-white/95 dark:bg-black/95 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.08] rounded-2xl p-2 flex flex-col text-[13px] font-medium text-gray-500 dark:text-gray-400">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                {...linkProps(link)}
+                onClick={closeMobile}
+                className="py-2.5 px-4 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/[0.05] rounded-xl transition-all"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
       )}

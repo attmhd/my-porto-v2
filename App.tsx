@@ -9,14 +9,14 @@ import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <div className="min-h-screen bg-background text-white selection:bg-primary selection:text-white">
+    <div className="min-h-screen bg-background dark:bg-background-dark text-gray-900 dark:text-white selection:bg-primary selection:text-white">
       {/* Navigation */}
       <Navbar />
 
       <main>
         <Hero />
-        <TechStack />
         <Projects />
+        <TechStack />
         <Credentials />
       </main>
 

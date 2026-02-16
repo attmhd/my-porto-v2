@@ -1,46 +1,69 @@
-import React from 'react';
-import { TECH_STACK } from '../constants';
-import { TechStackItem } from '../types';
+import React from "react";
+import { TECH_STACK } from "../constants";
+import { TechStackItem } from "../types";
 
 const TechStack: React.FC = () => {
-  const categories = Array.from(new Set(TECH_STACK.map(item => item.category)));
+  const midpoint = Math.ceil(TECH_STACK.length / 2);
+  const row1 = TECH_STACK.slice(0, midpoint);
+  const row2 = TECH_STACK.slice(midpoint);
 
-  return (
-    <section className="py-24 bg-surface/50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-4">
-            Tech Stack
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-             Tools and technologies I use to build intelligent and scalable systems.
-          </p>
-        </div>
+  const MarqueeRow: React.FC<{ items: TechStackItem[]; reverse?: boolean }> = ({
+    items,
+    reverse = false,
+  }) => {
+    const duplicated = [...items, ...items];
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-          {categories.map((category) => (
-            <div 
-              key={category} 
-              className="bg-background/80 backdrop-blur-sm border border-white/5 p-8 rounded-3xl hover:border-white/10 transition-all hover:shadow-2xl hover:shadow-primary/5 group"
+    return (
+      <div className="group relative overflow-hidden">
+        {/* Left fade */}
+        <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 z-10 bg-gradient-to-r from-surface dark:from-surface-dark/50 to-transparent pointer-events-none" />
+        {/* Right fade */}
+        <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 z-10 bg-gradient-to-l from-surface dark:from-surface-dark/50 to-transparent pointer-events-none" />
+
+        <div
+          className={`flex gap-6 md:gap-10 w-max ${
+            reverse ? "animate-marquee-reverse" : "animate-marquee"
+          } group-hover:[animation-play-state:paused]`}
+        >
+          {duplicated.map((tech, index) => (
+            <div
+              key={`${tech.name}-${index}`}
+              className="flex flex-col items-center justify-center gap-3 px-5 py-4 min-w-[100px] md:min-w-[120px] rounded-2xl bg-white/60 dark:bg-white/[0.03] border border-gray-200/80 dark:border-white/[0.06] backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:bg-white dark:hover:bg-white/[0.07] hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 cursor-default select-none"
             >
-              <h3 className="text-sm uppercase tracking-widest text-gray-500 font-semibold mb-6 flex items-center gap-3 after:content-[''] after:h-px after:flex-1 after:bg-gray-800">
-                {category}
-              </h3>
-              
-              <div className="flex flex-wrap gap-4">
-                {TECH_STACK.filter(t => t.category === category).map((tech: TechStackItem) => (
-                  <div 
-                    key={tech.name} 
-                    className="flex items-center gap-3 bg-surface border border-gray-800 px-4 py-3 rounded-xl transition-all hover:border-primary/50 hover:bg-gray-900 cursor-default"
-                  >
-                    <tech.icon className="text-xl text-gray-400 group-hover:text-white transition-colors" />
-                    <span className="text-sm font-medium text-gray-300">{tech.name}</span>
-                  </div>
-                ))}
-              </div>
+              <tech.icon className="text-2xl md:text-3xl text-gray-500 dark:text-gray-400 transition-colors duration-300 group-hover:text-gray-600 dark:group-hover:text-gray-300" />
+              <span className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                {tech.name}
+              </span>
             </div>
           ))}
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <section className="py-24 bg-surface dark:bg-surface-dark/50 overflow-hidden">
+      <div className="container mx-auto px-6">
+        <div className="max-w-3xl mb-16">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="font-mono text-sm text-primary tracking-wide">
+              &gt; tech_stack
+            </span>
+            <span className="h-px flex-1 bg-gray-200 dark:bg-white/10 max-w-[120px]" />
+          </div>
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+            Tech Stack
+          </h2>
+          <p className="text-gray-500 dark:text-gray-500 max-w-lg">
+            Tools and technologies I use to build intelligent and scalable
+            systems.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6 md:gap-8">
+        <MarqueeRow items={row1} />
+        <MarqueeRow items={row2} reverse />
       </div>
     </section>
   );
