@@ -35,10 +35,10 @@ import { Project, Education, Certificate, TechStackItem } from "./types";
 
 export const USER_INFO = {
   name: "Muhammad Attan",
-  role: "Backend and AI Engineer",
+  role: "Software Engineer",
   tagline: "Building scalable RAG pipelines and AI-driven backend systems.",
   about:
-    "I am a final-year Informatics Engineering student specializing in Backend Development and Artificial Intelligence. Experienced in building RAG pipelines, developing ML models, and deploying backend services using FastAPI, Docker, and DigitalOcean. I bridge the gap between complex AI models and production-ready applications.",
+    "I am a final-year Informatics Engineering student specializing in Backend Development and Artificial Intelligence, with a focus on business-driven development, clean architecture, and scalable system design.",
   location: "Padang, Indonesia",
   email: "attmhd2.work@gmail.com",
   cvUrl:

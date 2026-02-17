@@ -5,13 +5,15 @@ import {
   FaLinkedin,
   FaEnvelope,
   FaMapMarkerAlt,
+  FaInstagram,
 } from "react-icons/fa";
+import { FaMedium, FaThreads, FaYoutube } from "react-icons/fa6";
 
 const ROTATING_WORDS = [
   "scalable APIs",
   "RAG pipelines",
   "ML models",
-  "microservices",
+  "clean architecture",
   "cloud infrastructure",
 ];
 
@@ -383,10 +385,36 @@ const Hero: React.FC = () => {
                   <FaLinkedin />
                 </a>
                 <a
-                  href={`mailto:${USER_INFO.email}`}
+                  href="https://attmhd.medium.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
-                  <FaEnvelope />
+                  <FaMedium />
+                </a>
+                <a
+                  href="https://www.youtube.com/@attmhd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <FaYoutube />
+                </a>
+                <a
+                  href="https://www.instagram.com/tany.series"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <FaInstagram />
+                </a>
+                <a
+                  href="https://www.threads.com/@attan_mhd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <FaThreads />
                 </a>
               </div>
             </div>
