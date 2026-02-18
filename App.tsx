@@ -3,6 +3,7 @@ import Hero from "./components/Hero";
 import TechStack from "./components/TechStack";
 import Projects from "./components/Projects";
 import Credentials from "./components/Credentials";
+import Setup from "./components/Setup";
 import Footer from "./components/Footer";
 import AIChat from "./components/AIChat";
 import Navbar from "./components/Navbar";
@@ -18,6 +19,7 @@ function App() {
         <Projects />
         <TechStack />
         <Credentials />
+        <Setup />
       </main>
 
       <Footer />

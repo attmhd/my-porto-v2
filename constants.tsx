@@ -361,14 +361,14 @@ export const CERTIFICATES: Certificate[] = [
     id: "1",
     name: "Dev Certified for ML with TensorFlow",
     issuer: "TensorFlow",
-    date: "2024",
+    date: "2025",
     url: "https://dev.id/certificate/verify/JE0P36LW75",
   },
   {
     id: "2",
     name: "Generative AI with Large Language Models",
     issuer: "Coursera",
-    date: "2024",
+    date: "2025",
     url: "https://www.coursera.org/account/accomplishments/verify/RVKFMTBY5JRZ?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course",
   },
   {
@@ -376,13 +376,26 @@ export const CERTIFICATES: Certificate[] = [
     name: "ITS Python Certification",
     issuer: "Certiport",
     date: "2025",
-    url: "https://www.certiport.com/portal/Pages/PrintTranscriptInfo.aspx?action=Cert&format=pdf&id=471",
+    url: "https://drive.google.com/file/d/1vxQaQQuCfa3g8Bnui-Zp7feS2vshnhJj/view?usp=sharing",
   },
   {
     id: "4",
+    name: "Science and Technology Track Cloud, Machine Learning, & Security Academy",
+    issuer: "US-ASEAN STIC",
+    date: "2025",
+    url: "https://drive.google.com/file/d/1shmtEq9bOZTBAaI6owuFXpdk5N-BCK1Z/view",
+  },
+  {
+    id: "5",
     name: "Meta x Hacktiv8",
     issuer: "Meta",
     date: "2024",
     url: "https://drive.google.com/file/d/1SOGBYdkDcCbplU8QIQl39bfZ6fyml4Tu/view",
   },
 ];
+
+export const SETUP = {
+  hardware: "Thinkpad T460 i7 gen 6, 16GB RAM DDR3",
+  os: "CachyOS i3wm",
+  codeEditor: "Zed, Neovim, Antigravity",
+};
