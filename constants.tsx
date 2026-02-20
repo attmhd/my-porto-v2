@@ -323,7 +323,7 @@ export const TECH_STACK: TechStackItem[] = [
 
 export const EDUCATION: Education[] = [
   {
-    id: "2",
+    id: "1",
     institution: "Appskep Indonesia",
     degree: "AI Intern",
     year: "2025",
@@ -331,15 +331,15 @@ export const EDUCATION: Education[] = [
       "Developed RAG-based learning chatbot and video-to-text pipelines using Whisper and Vector DBs.",
   },
   {
-    id: "3",
+    id: "2",
     institution: "PT Telkomsel Indonesia",
-    degree: "Indonesia NEXT Participant",
+    degree: "Indonesia NEXT Batch 9 Participant",
     year: "2025",
     description:
       "Top 1000 participant. Earned Golden Ticket and ITS Python Certification.",
   },
   {
-    id: "4",
+    id: "3",
     institution: "Bangkit Academy",
     degree: "Machine Learning Cohort",
     year: "2024",
@@ -347,7 +347,7 @@ export const EDUCATION: Education[] = [
       "Selected as top 5 students for interaction. Built and deployed CNN models for classification.",
   },
   {
-    id: "5",
+    id: "4",
     institution: "Padang Institute of Technology",
     degree: "Bachelor of Informatics Engineering",
     year: "2022 - 2026",
@@ -360,7 +360,7 @@ export const CERTIFICATES: Certificate[] = [
   {
     id: "1",
     name: "Dev Certified for ML with TensorFlow",
-    issuer: "TensorFlow",
+    issuer: "dev.cert by dev.id",
     date: "2025",
     url: "https://dev.id/certificate/verify/JE0P36LW75",
   },

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FaDownload, FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
 import { USER_INFO } from "../constants";
 import { useTheme } from "../contexts/ThemeContext";
 
 const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#projects", label: "Projects" },
-  { href: "#experience", label: "Experience" },
-  { href: "https://blog.attmhd.me", label: "Blog", external: true },
+  { href: "#home", label: "Home", isAnchor: true },
+  { href: "#projects", label: "Projects", isAnchor: true },
+  { href: "/writing", label: "Writing", isAnchor: false },
+  { href: "#experience", label: "Experience", isAnchor: true },
 ];
 
 const Navbar: React.FC = () => {
@@ -24,9 +25,7 @@ const Navbar: React.FC = () => {
   const closeMobile = () => setIsMobileMenuOpen(false);
 
   const linkProps = (link: (typeof navLinks)[0]) =>
-    link.external
-      ? { target: "_blank" as const, rel: "noopener noreferrer" }
-      : {};
+    link ? { target: "_blank" as const, rel: "noopener noreferrer" } : {};
 
   return (
     <nav className="fixed top-5 left-0 right-0 z-50 flex flex-col items-center pointer-events-none px-4">
@@ -40,16 +39,26 @@ const Navbar: React.FC = () => {
       >
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-6 text-[13px] font-medium text-gray-500 dark:text-gray-500">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              {...linkProps(link)}
-              className="hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.isAnchor ? (
+              <a
+                key={link.label}
+                href={link.href}
+                {...linkProps(link)}
+                className="hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                {link.label}
+              </Link>
+            ),
+          )}
 
           <span className="h-3.5 w-px bg-gray-200 dark:bg-white/10" />
 
@@ -115,17 +124,28 @@ const Navbar: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="mt-3 pointer-events-auto w-full max-w-xs md:hidden">
           <div className="bg-white/95 dark:bg-black/95 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.08] rounded-2xl p-2 flex flex-col text-[13px] font-medium text-gray-500 dark:text-gray-400">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                {...linkProps(link)}
-                onClick={closeMobile}
-                className="py-2.5 px-4 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/[0.05] rounded-xl transition-all"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.isAnchor ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  {...linkProps(link)}
+                  onClick={closeMobile}
+                  className="py-2.5 px-4 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/[0.05] rounded-xl transition-all"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  onClick={closeMobile}
+                  className="py-2.5 px-4 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/[0.05] rounded-xl transition-all"
+                >
+                  {link.label}
+                </Link>
+              ),
+            )}
           </div>
         </div>
       )}
