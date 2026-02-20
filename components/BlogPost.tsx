@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {
   useBlogPost,
   useBlogPosts,
@@ -13,6 +15,24 @@ const formatDate = (dateString: string) =>
     month: "long",
     day: "numeric",
   });
+
+const CodeBlock = ({ node, inline, className, children, ...props }) => {
+  const match = /language-(\w+)/.exec(className || "");
+  return !inline && match ? (
+    <SyntaxHighlighter
+      style={oneDark}
+      language={match[1]}
+      PreTag="div"
+      {...props}
+    >
+      {String(children).replace(/\n$/, "")}
+    </SyntaxHighlighter>
+  ) : (
+    <code className={className} {...props}>
+      {children}
+    </code>
+  );
+};
 
 const RelatedCard: React.FC<{ post: BlogPostType }> = ({ post }) => (
   <Link
@@ -144,7 +164,9 @@ const BlogPost: React.FC = () => {
           {/* Article */}
           <article className="lg:col-span-3">
             <div className="prose-content">
-              <ReactMarkdown>{post.content}</ReactMarkdown>
+              <ReactMarkdown components={{ code: CodeBlock }}>
+                {post.content}
+              </ReactMarkdown>
             </div>
 
             {/* Related articles (mobile) */}

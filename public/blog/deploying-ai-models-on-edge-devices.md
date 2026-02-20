@@ -1,11 +1,3 @@
-<file_path>
-my-porto-v2/public/blog/deploying-ai-models-on-edge-devices.md
-</file_path>
-
-<edit_description>
-Create sample blog post 2
-</edit_description>
-
 ---
 title: "Deploying AI Models on Edge Devices"
 date: "2025-01-10"
@@ -13,9 +5,6 @@ slug: "deploying-ai-models-on-edge-devices"
 description: "Exploring the challenges and solutions for running AI models on resource-constrained edge devices like IoT sensors and mobile phones."
 tags: ["AI", "Edge Computing", "IoT", "Model Optimization"]
 ---
-
-# Deploying AI Models on Edge Devices
-
 The proliferation of Internet of Things (IoT) devices and the increasing demand for real-time AI inference have made edge computing a critical area of focus. Deploying AI models directly on edge devices offers numerous benefits, including reduced latency, improved privacy, and decreased bandwidth usage. However, it comes with significant challenges due to limited computational resources and power constraints.
 
 ## Challenges of Edge Deployment
