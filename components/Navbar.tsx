@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
   const closeMobile = () => setIsMobileMenuOpen(false);
 
   const linkProps = (link: (typeof navLinks)[0]) =>
-    link ? { target: "_blank" as const, rel: "noopener noreferrer" } : {};
+    link ? { rel: "noopener noreferrer" } : {};
 
   return (
     <nav className="fixed top-5 left-0 right-0 z-50 flex flex-col items-center pointer-events-none px-4">

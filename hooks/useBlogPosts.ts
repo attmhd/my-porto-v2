@@ -10,11 +10,10 @@ export interface BlogPost {
   readingTime: number;
 }
 
-// Add new post files here
-export const POST_FILES = [
-  "building-scalable-rag-pipelines.md",
-  "deploying-ai-models-on-edge-devices.md",
-];
+const postModules = import.meta.glob("../src/blog/*.md", {
+  query: "?raw",
+  import: "default",
+});
 
 export function slugify(title: string): string {
   return title
@@ -29,7 +28,10 @@ function calcReadingTime(content: string): number {
   return Math.max(1, Math.round(words / 200));
 }
 
-function parseFrontmatter(raw: string): { metadata: Record<string, any>; content: string } {
+function parseFrontmatter(raw: string): {
+  metadata: Record<string, any>;
+  content: string;
+} {
   const parts = raw.split("---");
   if (parts.length < 3) return { metadata: {}, content: raw };
 
@@ -41,7 +43,10 @@ function parseFrontmatter(raw: string): { metadata: Record<string, any>; content
     const colonIdx = line.indexOf(":");
     if (colonIdx === -1) return;
     const key = line.slice(0, colonIdx).trim();
-    const rawVal = line.slice(colonIdx + 1).trim().replace(/^["']|["']$/g, "");
+    const rawVal = line
+      .slice(colonIdx + 1)
+      .trim()
+      .replace(/^["']|["']$/g, "");
     if (key === "tags") {
       // handle both `["a","b"]` and `a, b` formats
       if (rawVal.startsWith("[")) {
@@ -51,7 +56,10 @@ function parseFrontmatter(raw: string): { metadata: Record<string, any>; content
           .map((t) => t.trim())
           .filter(Boolean);
       } else {
-        metadata[key] = rawVal.split(",").map((t) => t.trim()).filter(Boolean);
+        metadata[key] = rawVal
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean);
       }
     } else {
       metadata[key] = rawVal;
@@ -62,55 +70,47 @@ function parseFrontmatter(raw: string): { metadata: Record<string, any>; content
 }
 
 export async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
-  const fileName = POST_FILES.find((f) => f.replace(".md", "") === slug);
-  if (!fileName) return null;
+  const entry = Object.entries(postModules).find(
+    ([path]) => path.split("/").pop()!.replace(".md", "") === slug,
+  );
+  if (!entry) return null;
 
-  try {
-    const res = await fetch(`/blog/${fileName}`);
-    if (!res.ok) return null;
-    const text = await res.text();
-    const { metadata, content } = parseFrontmatter(text);
+  const [path, rawContent] = entry;
+  const text = await rawContent();
+  const { metadata, content } = parseFrontmatter(text);
 
-    return {
-      slug: metadata.slug || fileName.replace(".md", ""),
-      title: metadata.title || "Untitled",
-      date: metadata.date || "",
-      description: metadata.description || "",
-      tags: metadata.tags || [],
-      content,
-      readingTime: calcReadingTime(content),
-    };
-  } catch {
-    return null;
-  }
+  return {
+    slug: metadata.slug || path.split("/").pop()!.replace(".md", ""),
+    title: metadata.title || "Untitled",
+    date: metadata.date || "",
+    description: metadata.description || "",
+    tags: metadata.tags || [],
+    content,
+    readingTime: calcReadingTime(content),
+  };
 }
 
 export async function fetchAllPosts(): Promise<BlogPost[]> {
   const results = await Promise.all(
-    POST_FILES.map(async (file) => {
-      try {
-        const res = await fetch(`/blog/${file}`);
-        if (!res.ok) return null;
-        const text = await res.text();
-        const { metadata, content } = parseFrontmatter(text);
-        return {
-          slug: metadata.slug || file.replace(".md", ""),
-          title: metadata.title || "Untitled",
-          date: metadata.date || "",
-          description: metadata.description || "",
-          tags: metadata.tags || [],
-          content,
-          readingTime: calcReadingTime(content),
-        } as BlogPost;
-      } catch {
-        return null;
-      }
+    Object.entries(postModules).map(async ([path, rawContent]) => {
+      const text = await rawContent();
+      const { metadata, content } = parseFrontmatter(text);
+      const fileName = path.split("/").pop()!.replace(".md", "");
+      return {
+        slug: metadata.slug || fileName,
+        title: metadata.title || "Untitled",
+        date: metadata.date || "",
+        description: metadata.description || "",
+        tags: metadata.tags || [],
+        content,
+        readingTime: calcReadingTime(content),
+      } as BlogPost;
     }),
   );
 
-  return results
-    .filter((p): p is BlogPost => p !== null)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return results.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 }
 
 // Hook: all posts
