@@ -42,7 +42,7 @@ export const USER_INFO = {
   location: "Padang, Indonesia",
   email: "attmhd2.work@gmail.com",
   cvUrl:
-    "https://drive.google.com/file/d/1y06mSJHPdsBTOWoLf3dHDKhRPYwJ4JPu/view?usp=sharing",
+    "https://drive.google.com/file/d/1QFcuFLTajoP_eNEJ7nOI3P_KRey7BzdD/view?usp=drive_link",
 };
 
 export const PROJECTS: Project[] = [
