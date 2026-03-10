@@ -5,10 +5,11 @@ import { USER_INFO } from "../constants";
 import { useTheme } from "../contexts/ThemeContext";
 
 const navLinks = [
-  { href: "#home", label: "Home", isAnchor: true },
-  { href: "#projects", label: "Projects", isAnchor: true },
+  { href: "/#home", label: "Home", isAnchor: true },
+  { href: "/#projects", label: "Projects", isAnchor: true },
+  { href: "/tools", label: "Tools", isAnchor: false },
   { href: "/writing", label: "Writing", isAnchor: false },
-  { href: "#experience", label: "Experience", isAnchor: true },
+  { href: "/#experience", label: "Experience", isAnchor: true },
 ];
 
 const Navbar: React.FC = () => {
@@ -31,11 +32,10 @@ const Navbar: React.FC = () => {
     <nav className="fixed top-5 left-0 right-0 z-50 flex flex-col items-center pointer-events-none px-4">
       {/* Pill */}
       <div
-        className={`pointer-events-auto rounded-full px-5 py-2.5 md:px-6 md:py-2.5 transition-all duration-300 w-full max-w-xs md:max-w-fit ${
-          scrolled
-            ? "bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.08] shadow-sm"
-            : "bg-white/50 dark:bg-black/50 backdrop-blur-md border border-gray-200/30 dark:border-white/[0.04]"
-        }`}
+        className={`pointer-events-auto rounded-full px-5 py-2.5 md:px-6 md:py-2.5 transition-all duration-300 w-full max-w-xs md:max-w-fit ${scrolled
+          ? "bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.08] shadow-sm"
+          : "bg-white/50 dark:bg-black/50 backdrop-blur-md border border-gray-200/30 dark:border-white/[0.04]"
+          }`}
       >
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-6 text-[13px] font-medium text-gray-500 dark:text-gray-500">

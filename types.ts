@@ -7,8 +7,16 @@ export interface Project {
   technologies: string[];
   githubUrl?: string;
   demoUrl?: string;
-  image: string;
   category: "AI/ML" | "Backend" | "Data Science" | "DevOps" | "System Design";
+}
+
+export interface Tool {
+  id: string;
+  title: string;
+  description: string;
+  githubUrl?: string;
+  demoUrl?: string;
+  category: "Browser Extension" | "Automation" | "Utility" | "Web Tool";
 }
 
 export interface Education {

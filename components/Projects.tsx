@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { PROJECTS } from "../constants";
 import { FaTimes } from "react-icons/fa";
+import { FiGithub, FiExternalLink } from "react-icons/fi";
 
 const categories = [
   "All",
@@ -53,11 +54,10 @@ const Projects: React.FC = () => {
                   setActiveCategory(cat);
                   setShowAll(false);
                 }}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors border ${
-                  activeCategory === cat
+                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors border ${activeCategory === cat
                     ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-gray-900 dark:border-white"
                     : "bg-transparent text-gray-500 dark:text-gray-500 border-gray-200 dark:border-white/[0.08] hover:border-gray-400 dark:hover:border-white/20 hover:text-gray-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -106,33 +106,40 @@ const Projects: React.FC = () => {
                 </div>
 
                 {/* Action links */}
-                <div className="flex items-center gap-4 pt-4 border-t border-gray-100 dark:border-white/[0.04]">
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/[0.04]">
                   <button
                     onClick={() => setSelectedProject(project)}
-                    className="text-xs font-medium text-gray-900 dark:text-white hover:text-primary transition-colors"
+                    className="text-xs font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors flex items-center gap-1.5 group/btn"
                   >
-                    Details →
+                    Details
+                    <span className="group-hover/btn:translate-x-0.5 transition-transform duration-200">
+                      →
+                    </span>
                   </button>
-                  {project.demoUrl && project.demoUrl !== "#" && (
-                    <a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-medium text-gray-400 dark:text-gray-600 hover:text-primary transition-colors"
-                    >
-                      Live Demo ↗
-                    </a>
-                  )}
-                  {project.githubUrl && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-medium text-gray-400 dark:text-gray-600 hover:text-primary transition-colors"
-                    >
-                      Source ↗
-                    </a>
-                  )}
+                  <div className="flex items-center gap-3">
+                    {project.githubUrl && (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-all duration-200"
+                        title="View Source Code"
+                      >
+                        <FiGithub className="text-lg" />
+                      </a>
+                    )}
+                    {project.demoUrl && project.demoUrl !== "#" && (
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-all duration-200"
+                        title="Live Demo"
+                      >
+                        <FiExternalLink className="text-lg" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -216,29 +223,31 @@ const Projects: React.FC = () => {
 
               {/* Links */}
               {(selectedProject.demoUrl && selectedProject.demoUrl !== "#") ||
-              selectedProject.githubUrl ? (
-                <div className="flex flex-wrap items-center gap-3 pt-2">
+                selectedProject.githubUrl ? (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+                  {selectedProject.githubUrl && (
+                    <a
+                      href={selectedProject.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-white/[0.08] rounded-xl hover:border-gray-400 dark:hover:border-white/20 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
+                    >
+                      <FiGithub className="text-base" />
+                      Source Code
+                    </a>
+                  )}
                   {selectedProject.demoUrl &&
                     selectedProject.demoUrl !== "#" && (
                       <a
                         href={selectedProject.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-5 py-2 text-sm font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
+                        className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors shadow-lg shadow-gray-900/10 dark:shadow-white/10"
                       >
-                        Live Demo ↗
+                        <FiExternalLink className="text-base" />
+                        Live Demo
                       </a>
                     )}
-                  {selectedProject.githubUrl && (
-                    <a
-                      href={selectedProject.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-white/[0.08] rounded-full hover:border-gray-400 dark:hover:border-white/20 hover:text-gray-900 dark:hover:text-white transition-colors"
-                    >
-                      Source Code ↗
-                    </a>
-                  )}
                 </div>
               ) : null}
             </div>

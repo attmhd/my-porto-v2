@@ -31,7 +31,7 @@ import {
   SiAnsible,
   SiTerraform,
 } from "react-icons/si";
-import { Project, Education, Certificate, TechStackItem } from "./types";
+import { Project, Education, Certificate, TechStackItem, Tool } from "./types";
 
 export const USER_INFO = {
   name: "Muhammad Attan",
@@ -59,7 +59,6 @@ export const PROJECTS: Project[] = [
       "Gemini Flash 2.0",
       "Whisper",
     ],
-    image: "https://picsum.photos/600/400?random=10",
     category: "AI/ML",
   },
   {
@@ -75,8 +74,8 @@ export const PROJECTS: Project[] = [
       "DigitalOcean",
       "GitHub Actions",
     ],
-    image: "https://picsum.photos/600/400?random=11",
     category: "Backend",
+    githubUrl: "https://github.com/attmhd/klop-ai-be",
   },
   {
     id: "3",
@@ -84,8 +83,8 @@ export const PROJECTS: Project[] = [
     description:
       "End-to-end machine learning models using transfer learning with VGG16. Achieved 73% accuracy for face-shape and 91% for gender classification.",
     technologies: ["TensorFlow", "VGG16", "Python", "Transfer Learning"],
-    image: "https://picsum.photos/600/400?random=12",
     category: "Data Science",
+    githubUrl: "https://github.com/CP-Lookin/Machine-Learning",
   },
   {
     id: "4",
@@ -93,36 +92,31 @@ export const PROJECTS: Project[] = [
     description:
       "Digital dictionary to preserve Minangkabau dialects with a gamification system. Winner of The Most Creative Idea on Firetech 2025 Hackathon.",
     technologies: ["Vite JS", "Supabase", "Gamification"],
-    image: "https://picsum.photos/600/400?random=13",
     category: "Backend",
     demoUrl: "https://ml.natta.studio",
+    githubUrl: "https://github.com/attmhd/minang-language",
   },
   {
     id: "5",
     title: "Baso.AI",
     description: "AI-powered platform for learning Minang Language.",
     technologies: ["Vibe Coding", "Gemini"],
-    image: "https://picsum.photos/600/400?random=14",
     category: "AI/ML",
-    demoUrl: "#",
   },
   {
     id: "6",
     title: "Onlyfriends",
     description: "Chat web-based to talk with random people.",
     technologies: ["Golang", "Web Socket", "LLM"],
-    image: "https://picsum.photos/600/400?random=15",
     category: "Backend",
-    demoUrl: "https://ml.natta.studio",
   },
   {
     id: "7",
     title: "FamGPS",
     description: "GPS-based platform for tracking family members.",
     technologies: ["Golang", "Kafka"],
-    image: "https://picsum.photos/600/400?random=16",
     category: "Backend",
-    demoUrl: "https://ml.natta.studio",
+    githubUrl: "https://github.com/attmhd/fam-gps",
   },
   {
     id: "8",
@@ -137,9 +131,7 @@ export const PROJECTS: Project[] = [
       "PostgreSQL",
       "Redis",
     ],
-    image: "https://picsum.photos/600/400?random=17",
     category: "Backend",
-    demoUrl: "#",
   },
   {
     id: "9",
@@ -147,9 +139,7 @@ export const PROJECTS: Project[] = [
     description:
       "Notification aggregator that consumes events from RabbitMQ and dispatches messages via WebSocket and email. Uses gRPC for internal RPC between gateway and notifier services.",
     technologies: ["Golang", "FastAPI", "gRPC", "RabbitMQ", "Redis", "Docker"],
-    image: "https://picsum.photos/600/400?random=18",
     category: "Backend",
-    demoUrl: "#",
   },
   {
     id: "10",
@@ -164,9 +154,7 @@ export const PROJECTS: Project[] = [
       "Docker",
       "PostgreSQL",
     ],
-    image: "https://picsum.photos/600/400?random=19",
     category: "Backend",
-    demoUrl: "#",
   },
   {
     id: "11",
@@ -174,9 +162,7 @@ export const PROJECTS: Project[] = [
     description:
       "Design and implement a simple CI/CD pipeline for a microservice. Uses Jenkins to run build, test, and Docker image publishing steps, then deploys to a staging server. Includes branch-based pipelines and webhook integrations.",
     technologies: ["Jenkins", "GitHub Actions", "Docker", "FastAPI", "Redis"],
-    image: "https://picsum.photos/600/400?random=20",
     category: "DevOps",
-    demoUrl: "#",
   },
   {
     id: "12",
@@ -184,9 +170,7 @@ export const PROJECTS: Project[] = [
     description:
       "Provision cloud infrastructure using Terraform. Automates creation of VPC, compute instances, security groups, and managed databases. Supports multiple environments (dev/staging) with reusable modules.",
     technologies: ["Terraform", "DigitalOcean", "AWS", "PostgreSQL", "Docker"],
-    image: "https://picsum.photos/600/400?random=21",
     category: "DevOps",
-    demoUrl: "#",
   },
   {
     id: "13",
@@ -194,9 +178,7 @@ export const PROJECTS: Project[] = [
     description:
       "Use Ansible to automate server configuration and application deployment. Playbooks set up users, firewall rules, Docker runtime, and deploy a FastAPI service with environment templating and rolling updates.",
     technologies: ["Ansible", "FastAPI", "Docker", "Nginx", "Ubuntu Server"],
-    image: "https://picsum.photos/600/400?random=22",
     category: "DevOps",
-    demoUrl: "#",
   },
   {
     id: "14",
@@ -204,9 +186,7 @@ export const PROJECTS: Project[] = [
     description:
       "Design and implement an API gateway that centralizes authentication, authorization, request throttling, and request/response transformation. Supports JWT-based auth, per-tenant rate limits, and circuit breakers for downstream services.",
     technologies: ["Golang", "Envoy", "Redis", "JWT", "Docker", "OpenAPI"],
-    image: "https://picsum.photos/600/400?random=23",
     category: "System Design",
-    demoUrl: "#",
   },
   {
     id: "15",
@@ -214,9 +194,7 @@ export const PROJECTS: Project[] = [
     description:
       "Split read/write paths using CQRS, persist business events, and rebuild read models asynchronously. Includes idempotent command handling, snapshotting, and eventual consistency guarantees.",
     technologies: ["Golang", "PostgreSQL", "Kafka", "Protobuf", "Docker"],
-    image: "https://picsum.photos/600/400?random=24",
     category: "System Design",
-    demoUrl: "#",
   },
   {
     id: "16",
@@ -224,9 +202,7 @@ export const PROJECTS: Project[] = [
     description:
       "Design a multi-tier cache (in-memory + Redis) with cache-aside and write-through strategies. Includes cache invalidation, TTL policies, and hot-key mitigation via sharding.",
     technologies: ["Golang", "Redis", "Nginx", "Docker", "Prometheus"],
-    image: "https://picsum.photos/600/400?random=25",
     category: "System Design",
-    demoUrl: "#",
   },
   {
     id: "17",
@@ -241,9 +217,7 @@ export const PROJECTS: Project[] = [
       "Tempo",
       "Golang",
     ],
-    image: "https://picsum.photos/600/400?random=26",
     category: "DevOps",
-    demoUrl: "#",
   },
   {
     id: "18",
@@ -251,9 +225,7 @@ export const PROJECTS: Project[] = [
     description:
       "Design a robust consumer that handles poison messages with dead-letter queues, retries with backoff, and exactly-once processing using deduplication keys and transactional outbox pattern.",
     technologies: ["RabbitMQ", "PostgreSQL", "Golang", "Docker"],
-    image: "https://picsum.photos/600/400?random=27",
     category: "System Design",
-    demoUrl: "#",
   },
   {
     id: "19",
@@ -261,9 +233,7 @@ export const PROJECTS: Project[] = [
     description:
       "Build a SaaS backend supporting both pooled and siloed tenancy. Includes tenant-aware routing, per-tenant rate limits, data isolation, and billing events.",
     technologies: ["Golang", "PostgreSQL", "Redis", "Nginx", "Docker"],
-    image: "https://picsum.photos/600/400?random=28",
     category: "Backend",
-    demoUrl: "#",
   },
   {
     id: "20",
@@ -271,9 +241,7 @@ export const PROJECTS: Project[] = [
     description:
       "Design a search cluster that shards indexes by tenant and replicates for high availability. Implements leader election, read/write routing, and failover.",
     technologies: ["Elasticsearch", "Golang", "ZooKeeper", "Docker"],
-    image: "https://picsum.photos/600/400?random=29",
     category: "System Design",
-    demoUrl: "#",
   },
   {
     id: "21",
@@ -281,9 +249,39 @@ export const PROJECTS: Project[] = [
     description:
       "Edge-optimized media delivery pipeline. Origin server signs URLs, edge proxies cache content, and invalidation propagates via pub/sub. Includes rate limiting and token-based access.",
     technologies: ["Nginx", "Redis", "Golang", "RabbitMQ", "Docker"],
-    image: "https://picsum.photos/600/400?random=30",
     category: "System Design",
-    demoUrl: "#",
+  },
+];
+
+export const TOOLS: Tool[] = [
+  {
+    id: "1",
+    title: "Fast Translator Chrome Extension",
+    description: "Highly efficient translation tool focused on Indonesian dialects to English with built-in writing assistant modes.",
+    githubUrl: "https://github.com/attmhd/fast-translator",
+    category: "Browser Extension",
+  },
+  {
+    id: "2",
+    title: "YouTube Downloader CLI",
+    description: "A Python-based command-line tool for concurrent and high-speed YouTube video/audio downloading.",
+    githubUrl: "https://github.com/attmhd/yt-downloader-cli",
+    category: "Automation",
+  },
+  {
+    id: "3",
+    title: "LMS Auto-Attendance",
+    description: "Browser automation tool to handle periodic attendance pings for specific Learning Management Systems.",
+    githubUrl: "https://github.com/attmhd/lms-auto-absensi",
+    category: "Utility",
+  },
+  {
+    id: "4",
+    title: "Markdown Resume Generator",
+    description: "Generate professional PDFs from clean Markdown files with custom styling templates.",
+    githubUrl: "https://github.com/attmhd/md-resume",
+    category: "Web Tool",
+    demoUrl: "https://resume.natta.studio"
   },
 ];
 
@@ -324,6 +322,14 @@ export const TECH_STACK: TechStackItem[] = [
 export const EDUCATION: Education[] = [
   {
     id: "1",
+    institution: "AWS re/Start Batch 14",
+    degree: "Cloud Computing Cohort",
+    year: "2026",
+    description:
+      "Learn cloud computing fundamentals and best practices on AWS platform.",
+  },
+  {
+    id: "2",
     institution: "Appskep Indonesia",
     degree: "AI Intern",
     year: "2025",
@@ -331,7 +337,7 @@ export const EDUCATION: Education[] = [
       "Developed RAG-based learning chatbot and video-to-text pipelines using Whisper and Vector DBs.",
   },
   {
-    id: "2",
+    id: "3",
     institution: "PT Telkomsel Indonesia",
     degree: "Indonesia NEXT Batch 9 Participant",
     year: "2025",
@@ -339,7 +345,7 @@ export const EDUCATION: Education[] = [
       "Top 1000 participant. Earned Golden Ticket and ITS Python Certification.",
   },
   {
-    id: "3",
+    id: "4",
     institution: "Bangkit Academy",
     degree: "Machine Learning Cohort",
     year: "2024",
@@ -347,7 +353,7 @@ export const EDUCATION: Education[] = [
       "Selected as top 5 students for interaction. Built and deployed CNN models for classification.",
   },
   {
-    id: "4",
+    id: "5",
     institution: "Padang Institute of Technology",
     degree: "Bachelor of Informatics Engineering",
     year: "2022 - 2026",
