@@ -12,11 +12,15 @@ export interface Project {
 
 export interface Tool {
   id: string;
+  slug: string;
   title: string;
   description: string;
   githubUrl?: string;
   demoUrl?: string;
   category: "Browser Extension" | "Automation" | "Utility" | "Web Tool";
+  features: string[];
+  installation: string;
+  usage: string;
 }
 
 export interface Education {

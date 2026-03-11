@@ -257,11 +257,21 @@ export const TOOLS: Tool[] = [
 
   {
     id: "1",
+    slug: "universal-video-downloader",
     title: "Universal Video Downloader",
     description: "Multi-platform high-speed downloader for YouTube, TikTok, and Instagram. Supports high-quality downloads and batch processing.",
     githubUrl: "https://github.com/attmhd/yt-downloader",
     demoUrl: "https://github.com/attmhd/yt-downloader/releases/tag/v.1.0.2",
     category: "Automation",
+    features: [
+      "Support YouTube, TikTok, and Instagram",
+      "High-speed downloading",
+      "Multiple format support (MP4, MP3)",
+      "Batch processing",
+      "Clean and intuitive CLI/GUI interface"
+    ],
+    installation: "1. Download the latest release from GitHub.\n2. Extract the archive.\n3. Run the executable file.",
+    usage: "1. Copy the video URL.\n2. Paste into the downloader.\n3. Select quality and format.\n4. Click Download."
   }
 ];
 

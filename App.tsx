@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import AIChat from "./components/AIChat";
 import Navbar from "./components/Navbar";
 import Tools from "./components/Tools";
+import ToolDetail from "./components/ToolDetail";
 
 const Home: React.FC = () => (
   <main>
@@ -25,7 +26,7 @@ const Home: React.FC = () => (
 function App() {
   const location = useLocation();
   const isBlogPage = location.pathname.startsWith("/writing");
-  const isToolsPage = location.pathname === "/tools";
+  const isToolsPage = location.pathname.startsWith("/tools");
 
   return (
     <div className="min-h-screen bg-background dark:bg-background-dark text-gray-900 dark:text-white selection:bg-primary selection:text-white">
@@ -35,6 +36,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/tools" element={<Tools />} />
+        <Route path="/tools/:slug" element={<ToolDetail />} />
         <Route path="/writing" element={<Blog />} />
         <Route path="/writing/:slug" element={<BlogPost />} />
       </Routes>

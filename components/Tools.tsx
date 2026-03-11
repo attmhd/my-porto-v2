@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { TOOLS } from "../constants";
 import { FiGithub, FiExternalLink } from "react-icons/fi";
 
@@ -25,8 +26,9 @@ const Tools: React.FC = () => {
                 {/* Tools Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {TOOLS.map((tool) => (
-                        <div
+                        <Link
                             key={tool.id}
+                            to={`/tools/${tool.slug}`}
                             className="group flex flex-col justify-between bg-gray-50/50 dark:bg-white/[0.02] border border-gray-200/80 dark:border-white/[0.06] rounded-2xl p-6 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 dark:hover:shadow-none relative overflow-hidden"
                         >
                             {/* Decorative gradient overlay */}
@@ -51,26 +53,36 @@ const Tools: React.FC = () => {
                             <div className="mt-auto pt-6 border-t border-gray-100 dark:border-white/[0.04] flex items-center justify-between relative z-10">
                                 <div className="flex items-center gap-3">
                                     {tool.githubUrl && (
-                                        <a
-                                            href={tool.githubUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-2.5 rounded-xl bg-white dark:bg-white/5 text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary border border-gray-200 dark:border-white/10 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-200"
-                                            title="View Source"
+                                        <div
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="contents"
                                         >
-                                            <FiGithub className="text-lg" />
-                                        </a>
+                                            <a
+                                                href={tool.githubUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2.5 rounded-xl bg-white dark:bg-white/5 text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary border border-gray-200 dark:border-white/10 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-200"
+                                                title="View Source"
+                                            >
+                                                <FiGithub className="text-lg" />
+                                            </a>
+                                        </div>
                                     )}
                                     {tool.demoUrl && (
-                                        <a
-                                            href={tool.demoUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-2.5 rounded-xl bg-white dark:bg-white/5 text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary border border-gray-200 dark:border-white/10 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-200"
-                                            title="View Deployment / Release"
+                                        <div
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="contents"
                                         >
-                                            <FiExternalLink className="text-lg" />
-                                        </a>
+                                            <a
+                                                href={tool.demoUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2.5 rounded-xl bg-white dark:bg-white/5 text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary border border-gray-200 dark:border-white/10 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-200"
+                                                title="View Deployment / Release"
+                                            >
+                                                <FiExternalLink className="text-lg" />
+                                            </a>
+                                        </div>
                                     )}
                                 </div>
 
@@ -78,7 +90,7 @@ const Tools: React.FC = () => {
                                     ID: {tool.id.padStart(2, '0')}
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
 
