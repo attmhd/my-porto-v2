@@ -254,35 +254,15 @@ export const PROJECTS: Project[] = [
 ];
 
 export const TOOLS: Tool[] = [
+
   {
     id: "1",
-    title: "Fast Translator Chrome Extension",
-    description: "Highly efficient translation tool focused on Indonesian dialects to English with built-in writing assistant modes.",
-    githubUrl: "https://github.com/attmhd/fast-translator",
-    category: "Browser Extension",
-  },
-  {
-    id: "2",
-    title: "YouTube Downloader CLI",
-    description: "A Python-based command-line tool for concurrent and high-speed YouTube video/audio downloading.",
-    githubUrl: "https://github.com/attmhd/yt-downloader-cli",
+    title: "Universal Video Downloader",
+    description: "Multi-platform high-speed downloader for YouTube, TikTok, and Instagram. Supports high-quality downloads and batch processing.",
+    githubUrl: "https://github.com/attmhd/yt-downloader",
+    demoUrl: "https://github.com/attmhd/yt-downloader/releases/tag/v.1.0.2",
     category: "Automation",
-  },
-  {
-    id: "3",
-    title: "LMS Auto-Attendance",
-    description: "Browser automation tool to handle periodic attendance pings for specific Learning Management Systems.",
-    githubUrl: "https://github.com/attmhd/lms-auto-absensi",
-    category: "Utility",
-  },
-  {
-    id: "4",
-    title: "Markdown Resume Generator",
-    description: "Generate professional PDFs from clean Markdown files with custom styling templates.",
-    githubUrl: "https://github.com/attmhd/md-resume",
-    category: "Web Tool",
-    demoUrl: "https://resume.natta.studio"
-  },
+  }
 ];
 
 export const TECH_STACK: TechStackItem[] = [
