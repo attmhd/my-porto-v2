@@ -312,6 +312,15 @@ export const TECH_STACK: TechStackItem[] = [
 ];
 
 export const EDUCATION: Education[] = [
+
+   {
+    id: "0",
+    institution: "Datatalks.club",
+    degree: "LLM Zoomcamp Cohort",
+    year: "2026",
+    description:
+      "Learn LLM Engineering and Production ready.",
+  },
   {
     id: "1",
     institution: "AWS re/Start Batch 14",
