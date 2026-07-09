@@ -12,6 +12,7 @@ import SetupSection from "../components/admin/SetupSection";
 import TechStackSection from "../components/admin/TechStackSection";
 import ToolsSection from "../components/admin/ToolsSection";
 import BlogSection from "../components/admin/BlogSection";
+import { ToastProvider, useToast } from "../components/admin/ToastContext";
 
 type TabKey =
   | "profile"
@@ -37,7 +38,7 @@ const tabs: { key: TabKey; label: string }[] = [
 const cardClass =
   "rounded-2xl border border-gray-200 bg-white p-5 dark:border-white/[0.08] dark:bg-surface-dark";
 
-const Admin: React.FC = () => {
+const AdminContent: React.FC = () => {
   const { data, setData, resetData, isReady, storageLabel } = usePortfolio();
   const [draft, setDraft] = useState<PortfolioData>(clonePortfolioData(data));
   const [activeTab, setActiveTab] = useState<TabKey>("profile");
@@ -49,6 +50,8 @@ const Admin: React.FC = () => {
     certificates: 1,
   });
   const [status, setStatus] = useState<"idle" | "saved">("idle");
+  
+  const { showToast } = useToast();
 
   // Auth State
   const [user, setUser] = useState<User | null>(null);
@@ -99,11 +102,14 @@ const Admin: React.FC = () => {
 
       if (error) {
         setAuthError(error.message);
+        showToast(error.message, "error");
       } else {
         setUser(data.user);
+        showToast("Logged in successfully!", "success");
       }
     } catch (err: any) {
       setAuthError(err.message ?? "An unexpected error occurred.");
+      showToast(err.message ?? "An unexpected error occurred.", "error");
     } finally {
       setLoggingIn(false);
     }
@@ -112,25 +118,27 @@ const Admin: React.FC = () => {
   const handleLogout = async () => {
     if (!supabase) return;
     await supabase.auth.signOut();
+    showToast("Logged out successfully!", "info");
   };
 
   useEffect(() => {
     if (isReady) setDraft(clonePortfolioData(data));
   }, [data, isReady]);
 
-  const showSaved = () => {
+  const showSaved = (message: string) => {
     setStatus("saved");
+    showToast(message, "success");
     window.setTimeout(() => setStatus("idle"), 1800);
   };
 
   const save = () => {
     setData(clonePortfolioData(draft));
-    showSaved();
+    showSaved("Portfolio changes saved successfully!");
   };
 
   const reset = () => {
     resetData();
-    showSaved();
+    showSaved("Portfolio changes reset to database values.");
   };
 
   const sectionNote = useMemo(
@@ -446,6 +454,14 @@ const Admin: React.FC = () => {
         </section>
       </div>
     </main>
+  );
+};
+
+const Admin: React.FC = () => {
+  return (
+    <ToastProvider>
+      <AdminContent />
+    </ToastProvider>
   );
 };
 

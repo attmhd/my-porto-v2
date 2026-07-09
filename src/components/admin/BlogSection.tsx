@@ -15,8 +15,10 @@ import {
 } from "./shared";
 import ReactMarkdown from "react-markdown";
 import { generateBlogContentStream } from "../../services/geminiService";
+import { useToast } from "./ToastContext";
 
 export const BlogSection: React.FC = () => {
+    const { showToast } = useToast();
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -88,9 +90,10 @@ export const BlogSection: React.FC = () => {
         try {
             await deleteBlogPost(slugToDelete);
             setPosts((prev) => prev.filter((p) => p.slug !== slugToDelete));
-        } catch (err) {
+            showToast("Blog post deleted successfully!", "success");
+        } catch (err: any) {
             console.error("Failed to delete post", err);
-            alert("Error deleting post");
+            showToast(err.message || "Failed to delete blog post.", "error");
         }
     };
 
@@ -110,9 +113,11 @@ export const BlogSection: React.FC = () => {
                     if (parsed.description) setDescription(parsed.description);
                     if (parsed.tags) setTagsInput(parsed.tags.join(", "));
                     if (parsed.content) setContent(parsed.content);
+                    showToast("Markdown file imported successfully!", "success");
                 } catch (error) {
                     console.error("Error parsing markdown file", error);
                     setErrorMsg("Could not parse file. Make sure file has valid YAML frontmatter.");
+                    showToast("Could not parse file. Invalid YAML frontmatter.", "error");
                 }
             }
         };
@@ -169,6 +174,7 @@ export const BlogSection: React.FC = () => {
                     setContent((prev) => prev + text);
                 }
             }
+            showToast("Blog content generated successfully!", "success");
         } catch (err: any) {
             console.error("AI generation failed", err);
             setErrorMsg(
@@ -176,6 +182,7 @@ export const BlogSection: React.FC = () => {
                     ? "Gemini API Key is missing. Please ensure GEMINI_API_KEY is set in your .env file."
                     : `Failed to generate blog content: ${err.message || "Unknown error"}`
             );
+            showToast("Failed to generate content with AI.", "error");
         } finally {
             setIsGenerating(false);
         }
@@ -218,9 +225,11 @@ export const BlogSection: React.FC = () => {
             // Refresh local list
             await fetchPosts();
             setIsEditing(false);
+            showToast("Blog post saved successfully!", "success");
         } catch (err: any) {
             console.error("Failed to save post", err);
             setErrorMsg(err.message || "Failed to save blog post. Verify database schema.");
+            showToast("Failed to save blog post.", "error");
         } finally {
             setIsSaving(false);
         }
