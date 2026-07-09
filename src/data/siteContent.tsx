@@ -9,7 +9,7 @@ import {
   SiPostgresql,
   SiMongodb,
   SiRedis,
-  SiAmazon,
+  SiAmazonwebservices,
   SiGooglecloud,
   SiGit,
   SiReact,
@@ -287,7 +287,7 @@ export const TECH_STACK: TechStackItem[] = DEFAULT_TECH_STACK.map((item) => ({
 
 export const EDUCATION: Education[] = [
 
-   {
+  {
     id: "0",
     institution: "Datatalks.club",
     degree: "LLM Zoomcamp Cohort",

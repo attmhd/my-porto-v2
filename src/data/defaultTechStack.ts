@@ -25,7 +25,7 @@ import {
   SiTerraform,
   SiTensorflow,
   SiTypescript,
-  SiAmazon,
+  SiAmazonwebservices,
 } from "react-icons/si";
 import type { TechStackItem } from "../types";
 
@@ -57,7 +57,7 @@ export const DEFAULT_TECH_STACK: TechStackSeed[] = [
   { name: "Ansible", icon: SiAnsible, category: "Tool" },
   { name: "Kubernetes", icon: SiKubernetes, category: "Tool" },
   { name: "Terraform", icon: SiTerraform, category: "Tool" },
-  { name: "AWS", icon: SiAmazon, category: "Cloud" },
+  { name: "AWS", icon: SiAmazonwebservices, category: "Cloud" },
   { name: "DigitalOcean", icon: SiDigitalocean, category: "Cloud" },
   { name: "Supabase", icon: SiSupabase, category: "Cloud" },
   { name: "Pandas", icon: SiPandas, category: "Tool" },

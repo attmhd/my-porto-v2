@@ -24,7 +24,7 @@ import {
   SiTerraform,
   SiTensorflow,
   SiTypescript,
-  SiAmazon,
+  SiAmazonwebservices,
 } from "react-icons/si";
 import type { IconType } from "react-icons";
 import {
@@ -132,7 +132,7 @@ export const TECH_STACK_ICONS = {
   Ansible: SiAnsible,
   Kubernetes: SiKubernetes,
   Terraform: SiTerraform,
-  AWS: SiAmazon,
+  AWS: SiAmazonwebservices,
   DigitalOcean: SiDigitalocean,
   Supabase: SiSupabase,
   Pandas: SiPandas,
@@ -306,11 +306,11 @@ Contact: ${data.userInfo.email}
 
 Tech Stack: ${data.techStack.map((t) => t.name).join(", ")}.
 Projects: ${data.projects
-    .map((p) => `${p.title} (${p.category}): ${p.description}`)
-    .join("; ")}.
+      .map((p) => `${p.title} (${p.category}): ${p.description}`)
+      .join("; ")}.
 Education: ${data.education
-    .map((e) => `${e.degree} from ${e.institution}`)
-    .join("; ")}.
+      .map((e) => `${e.degree} from ${e.institution}`)
+      .join("; ")}.
 Certificates: ${data.certificates.map((c) => c.name).join(", ")}.
 
 Tone: Professional, enthusiastic, concise, and helpful.
