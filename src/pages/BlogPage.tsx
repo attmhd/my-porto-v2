@@ -35,25 +35,56 @@ const FeaturedCard: React.FC<{ post: BlogPost }> = ({ post }) => (
 const PostCard: React.FC<{ post: BlogPost }> = ({ post }) => (
   <Link
     to={`/writing/${post.slug}`}
-    className="group block py-1 border-b border-gray-100 last:border-0 hover:opacity-80 transition-opacity"
+    className="group block py-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors rounded-md"
   >
-    <div className="flex items-center gap-4">
-      <span className="text-sm font-mono text-gray-400">
-        {formatDate(post.date)}
-      </span>
-      <span className="text-gray-300">·</span>
-      <h3 className="text-base font-display font-bold text-gray-900 group-hover:text-primary transition-colors leading-snug">
-        {post.title}
-      </h3>
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex-1">
+        <div className="flex items-center gap-3 mb-1">
+          <span className="text-sm font-mono text-gray-400">
+            {formatDate(post.date)}
+          </span>
+          <span className="text-gray-300">·</span>
+          <span className="text-sm font-mono text-gray-400">{post.readingTime} min read</span>
+        </div>
+        <h3 className="text-base font-display font-bold text-gray-900 group-hover:text-primary transition-colors leading-snug">
+          {post.title}
+        </h3>
+        <p className="mt-1 text-sm text-gray-600">{post.description}</p>
+      </div>
+      <div className="hidden sm:flex sm:flex-col items-end gap-2">
+        <div className="text-xs font-mono text-gray-500">
+          {post.tags.slice(0, 2).join(", ")}
+        </div>
+      </div>
     </div>
   </Link>
 );
 
 const Blog: React.FC = () => {
   const { posts, loading } = useBlogPosts();
+  const [query, setQuery] = React.useState("");
+  const [selectedTag, setSelectedTag] = React.useState<string | null>(null);
 
-  const featured = posts[0] ?? null;
-  const rest = posts.slice(1);
+  const tags = React.useMemo(
+    () => Array.from(new Set(posts.flatMap((p) => p.tags))),
+    [posts],
+  );
+
+  const filtered = React.useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return posts.filter((p) => {
+      if (selectedTag && !p.tags.includes(selectedTag)) return false;
+      if (!q) return true;
+      return (
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.content.toLowerCase().includes(q)
+      );
+    });
+  }, [posts, query, selectedTag]);
+
+  const featured = filtered[0] ?? null;
+  const rest = filtered.slice(featured ? 1 : 0);
 
   if (loading) {
     return (
@@ -104,9 +135,45 @@ const Blog: React.FC = () => {
                 Thoughts on AI, backend systems, and the craft of software
                 engineering.
               </p>
+
+              <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:gap-3">
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search posts (title, description, content)"
+                  className="w-full md:w-80 px-3 py-2 border rounded-md text-sm bg-gray-50 focus:outline-primary"
+                />
+                {query && (
+                  <button
+                    onClick={() => setQuery("")}
+                    className="mt-2 sm:mt-0 text-sm font-mono text-gray-500"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  onClick={() => setSelectedTag(null)}
+                  className={`text-xs px-2 py-1 rounded-full ${!selectedTag ? "bg-primary text-white" : "bg-gray-100 text-gray-600"}`}
+                >
+                  All
+                </button>
+                {tags.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTag(tag)}
+                    className={`text-xs px-2 py-1 rounded-full ${selectedTag === tag ? "bg-primary text-white" : "bg-gray-100 text-gray-600"}`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
             </div>
+
             <p className="text-sm font-mono text-gray-400 shrink-0">
-              {posts.length} {posts.length === 1 ? "article" : "articles"}
+              {filtered.length} {filtered.length === 1 ? "article" : "articles"}
             </p>
           </div>
         </div>
@@ -118,10 +185,13 @@ const Blog: React.FC = () => {
           {/* Main feed */}
           <div className="lg:col-span-2">
             {featured && <FeaturedCard post={featured} />}
-            <div className="space-y-0">
+            <div className="space-y-4 mt-4">
               {rest.map((post) => (
                 <PostCard key={post.slug} post={post} />
               ))}
+              {rest.length === 0 && !featured && (
+                <p className="text-sm text-gray-500">No posts match your search.</p>
+              )}
             </div>
           </div>
 
@@ -132,17 +202,27 @@ const Blog: React.FC = () => {
                 <h3 className="text-xs font-semibold text-gray-700 mb-3 tracking-wide uppercase">
                   Topics
                 </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {Array.from(new Set(posts.flatMap((p) => p.tags))).map(
-                    (tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] font-mono text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ),
-                  )}
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setSelectedTag(null)}
+                    className={`text-[12px] px-2 py-1 rounded-full ${!selectedTag ? "bg-primary text-white" : "bg-gray-100 text-gray-600"}`}
+                  >
+                    All
+                  </button>
+                  {tags.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => setSelectedTag(tag)}
+                      className={`text-[12px] px-2 py-1 rounded-full ${selectedTag === tag ? "bg-primary text-white" : "bg-gray-100 text-gray-600"}`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-6">
+                  <h4 className="text-xs font-semibold text-gray-700 mb-2 tracking-wide uppercase">Quick filter</h4>
+                  <div className="text-sm text-gray-600">Showing {filtered.length} posts</div>
                 </div>
               </div>
             </div>
