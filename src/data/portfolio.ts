@@ -24,18 +24,10 @@ import {
   SiTerraform,
   SiTensorflow,
   SiTypescript,
-  SiAmazonwebservices,
+  SiAmazon,
 } from "react-icons/si";
 import type { IconType } from "react-icons";
-import {
-  CERTIFICATES,
-  EDUCATION,
-  PROJECTS,
-  SETUP,
-  TECH_STACK,
-  TOOLS,
-  USER_INFO,
-} from "./siteContent";
+import { DEFAULT_SETUP } from "./defaultSetup";
 
 export type PortfolioIconName = keyof typeof TECH_STACK_ICONS;
 
@@ -132,7 +124,7 @@ export const TECH_STACK_ICONS = {
   Ansible: SiAnsible,
   Kubernetes: SiKubernetes,
   Terraform: SiTerraform,
-  AWS: SiAmazonwebservices,
+  AWS: SiAmazon,
   DigitalOcean: SiDigitalocean,
   Supabase: SiSupabase,
   Pandas: SiPandas,
@@ -187,17 +179,21 @@ export function clonePortfolioData(data: PortfolioData): PortfolioData {
 
 export function createDefaultPortfolioData(): PortfolioData {
   return {
-    userInfo: { ...USER_INFO },
-    projects: cloneProjects(PROJECTS),
-    tools: cloneTools(TOOLS),
-    techStack: TECH_STACK.map((item) => ({
-      name: item.name,
-      iconName: isPortfolioIconName(item.name) ? item.name : DEFAULT_ICON_NAME,
-      category: item.category,
-    })),
-    education: cloneEducation(EDUCATION),
-    certificates: cloneCertificates(CERTIFICATES),
-    setup: { ...SETUP },
+    userInfo: {
+      name: "",
+      role: "",
+      tagline: "",
+      about: "",
+      location: "",
+      email: "",
+      cvUrl: "",
+    },
+    projects: [],
+    tools: [],
+    techStack: [],
+    education: [],
+    certificates: [],
+    setup: { ...DEFAULT_SETUP },
   };
 }
 
