@@ -1,20 +1,47 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# My Porto v2
 
-# Run and deploy your AI Studio app
+Portfolio website built with React, Vite, and TypeScript.
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/105Sk1gRLQfPZEfA-YlQgX7839Rjh7PoI
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
+## Quick start
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+2. Copy env template:
+   ```bash
+   cp .env.example .env
+   ```
+3. Run locally:
+   ```bash
+   npm run dev
+   ```
+
+## Supabase setup
+
+1. Create a Supabase project.
+2. Fill `.env`:
+   ```env
+   VITE_SUPABASE_URL=...
+   VITE_SUPABASE_ANON_KEY=...
+   VITE_SUPABASE_PORTFOLIO_TABLE=portfolio_state
+   VITE_SUPABASE_PORTFOLIO_ROW_ID=current
+   ```
+3. Run the SQL in `supabase/migrations/0001_portfolio_state.sql`.
+
+The app will use Supabase when credentials are present, and fall back to localStorage otherwise.
+
+## Structure
+
+- `src/components` - reusable UI components
+- `src/pages` - route-level pages
+- `src/data` - shared content and portfolio models
+- `src/services` - API and persistence layers
+- `src/contexts` - React providers
+- `src/hooks` - custom hooks
+
+## Scripts
+
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
