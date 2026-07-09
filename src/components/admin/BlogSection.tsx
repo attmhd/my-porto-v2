@@ -14,6 +14,7 @@ import {
     SectionHeader
 } from "./shared";
 import ReactMarkdown from "react-markdown";
+import { generateBlogContentStream } from "../../services/geminiService";
 
 export const BlogSection: React.FC = () => {
     const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -33,6 +34,11 @@ export const BlogSection: React.FC = () => {
     const [content, setContent] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [isSaving, setIsSaving] = useState(false);
+
+    // AI Content Generator states
+    const [aiPrompt, setAiPrompt] = useState("");
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [useMetadata, setUseMetadata] = useState(true);
 
     useEffect(() => {
         fetchPosts();
@@ -122,6 +128,57 @@ export const BlogSection: React.FC = () => {
             .trim()
             .replace(/\s+/g, "-");
         setSlug(generated);
+    };
+
+    const handleGenerateWithAI = async () => {
+        if (isGenerating) return;
+
+        setErrorMsg("");
+        setIsGenerating(true);
+
+        const promptText = aiPrompt.trim();
+        const tags = tagsInput
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean);
+
+        // Standard overwrite confirmation if content already exists
+        if (content.trim()) {
+            const shouldAppend = window.confirm(
+                "Do you want to append the generated content to the end of the current post? Click 'Cancel' to overwrite."
+            );
+            if (!shouldAppend) {
+                setContent("");
+            }
+        }
+
+        try {
+            const stream = await generateBlogContentStream(
+                promptText,
+                useMetadata ? title : undefined,
+                useMetadata ? description : undefined,
+                useMetadata ? tags : undefined
+            );
+
+            // Switch to write tab so they can see it writing
+            setEditorTab("write");
+
+            for await (const chunk of stream) {
+                const text = chunk.text;
+                if (text) {
+                    setContent((prev) => prev + text);
+                }
+            }
+        } catch (err: any) {
+            console.error("AI generation failed", err);
+            setErrorMsg(
+                err.message === "API Key missing"
+                    ? "Gemini API Key is missing. Please ensure GEMINI_API_KEY is set in your .env file."
+                    : `Failed to generate blog content: ${err.message || "Unknown error"}`
+            );
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     const handleSave = async (e: React.FormEvent) => {
@@ -313,6 +370,87 @@ export const BlogSection: React.FC = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Brief description of the post..."
                         />
+                    </div>
+
+                    {/* AI Generator Assistant */}
+                    <div className="rounded-xl border border-gray-200 dark:border-white/[0.08] bg-gray-50/50 dark:bg-white/[0.01] p-4 space-y-3.5">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <span className="text-base">✨</span>
+                                <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">AI Writer Assistant</h4>
+                            </div>
+                            <span className="text-[10px] bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-mono font-semibold">
+                                Gemini-2.5-Flash
+                            </span>
+                        </div>
+                        
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Let AI draft or refine your article directly in the editor. Set custom instructions or let the AI write based on your current metadata.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                            <div className="md:col-span-2 space-y-1.5">
+                                <label className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                    Custom Prompt / Instructions (Optional)
+                                </label>
+                                <input
+                                    type="text"
+                                    className={fieldClass}
+                                    value={aiPrompt}
+                                    onChange={(e) => setAiPrompt(e.target.value)}
+                                    placeholder="e.g. Focus on Server Actions, add code examples, explain performance implications..."
+                                    disabled={isGenerating}
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-4 h-10 pb-1">
+                                <label className="flex items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-300 cursor-pointer select-none">
+                                    <input
+                                        type="checkbox"
+                                        checked={useMetadata}
+                                        onChange={(e) => setUseMetadata(e.target.checked)}
+                                        className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
+                                        disabled={isGenerating}
+                                    />
+                                    Include Title, Tags & Desc
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2 pt-1.5">
+                            <button
+                                type="button"
+                                onClick={handleGenerateWithAI}
+                                disabled={isGenerating || (!aiPrompt.trim() && !useMetadata) || (useMetadata && !title.trim())}
+                                className="rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-xs font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-all flex items-center gap-1.5"
+                            >
+                                {isGenerating ? (
+                                    <>
+                                        <div className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
+                                        <span>AI is writing...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>✨</span> Generate Content
+                                    </>
+                                )}
+                            </button>
+
+                            {content.trim() && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (window.confirm("Are you sure you want to clear the editor content?")) {
+                                            setContent("");
+                                        }
+                                    }}
+                                    className="rounded-full border border-gray-200 dark:border-white/[0.08] px-4 py-2 text-xs text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/[0.05]"
+                                    disabled={isGenerating}
+                                >
+                                    Clear Content
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/* Dynamic editor interface with Write and Preview options */}

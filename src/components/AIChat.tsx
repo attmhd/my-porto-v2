@@ -46,14 +46,14 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
+      const stream = await sendMessageToGemini(userMsg.text);
+
       const modelMsgPlaceholder: ChatMessage = {
         role: "model",
         text: "",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, modelMsgPlaceholder]);
-
-      const stream = await sendMessageToGemini(userMsg.text);
 
       let fullText = "";
 
@@ -71,15 +71,21 @@ const AIChat: React.FC = () => {
           });
         }
       }
-    } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "model",
-          text: "I'm sorry, I'm currently disconnected from the brain. Please check the API config.",
-          timestamp: new Date(),
-        },
-      ]);
+    } catch (error: any) {
+      setMessages((prev) => {
+        // Filter out any lingering empty model messages
+        const filtered = prev.filter((msg) => msg.role !== "model" || msg.text !== "");
+        return [
+          ...filtered,
+          {
+            role: "model",
+            text: error.message && error.message.includes("Rate limit")
+              ? `⚠️ **Rate Limit:** ${error.message}`
+              : "I'm sorry, I'm currently disconnected from the brain. Please check the API config.",
+            timestamp: new Date(),
+          },
+        ];
+      });
     } finally {
       setIsLoading(false);
     }
