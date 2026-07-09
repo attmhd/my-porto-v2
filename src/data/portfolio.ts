@@ -24,7 +24,7 @@ import {
   SiTerraform,
   SiTensorflow,
   SiTypescript,
-  SiAmazon,
+  SiAmazonwebservices,
 } from "react-icons/si";
 import type { IconType } from "react-icons";
 import { DEFAULT_SETUP } from "./defaultSetup";
@@ -124,7 +124,7 @@ export const TECH_STACK_ICONS = {
   Ansible: SiAnsible,
   Kubernetes: SiKubernetes,
   Terraform: SiTerraform,
-  AWS: SiAmazon,
+  AWS: SiAmazonwebservices,
   DigitalOcean: SiDigitalocean,
   Supabase: SiSupabase,
   Pandas: SiPandas,
