@@ -50,6 +50,44 @@ const RelatedCard: React.FC<{ post: BlogPostType }> = ({ post }) => (
   </Link>
 );
 
+// Instagram share helper: attempts Web Share API then copies link to clipboard as fallback
+const InstagramShare: React.FC<{ post: BlogPostType }> = ({ post }) => {
+  const [copied, setCopied] = React.useState(false);
+  const getUrl = () => (typeof window !== "undefined" ? window.location.origin + `/writing/${post.slug}` : "");
+
+  const handleShare = async () => {
+    const url = getUrl();
+    // Prefer native share where available (mobile) so user can pick Instagram
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: post.title, text: post.description || post.title, url });
+        return;
+      } catch (err) {
+        // fall through to clipboard
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      // ignore
+    }
+  };
+
+  return (
+    <button
+      onClick={handleShare}
+      className="text-sm font-mono text-gray-700 hover:text-primary transition-colors"
+      aria-label="Share to Instagram"
+      title={copied ? "Link copied" : "Share to Instagram"}
+    >
+      Instagram{copied ? " (copied)" : ""}
+    </button>
+  );
+};
+
 const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { post, loading, error } = useBlogPost(slug);
@@ -226,30 +264,37 @@ const BlogPost: React.FC = () => {
                   Share on
                 </p>
                 <div className="flex items-center gap-3">
-                  <a
-                    href={`#`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  {/* WhatsApp - open share to WhatsApp/Status */}
+                  <button
+                    onClick={() => {
+                      const url = window.location.origin + `/writing/${post.slug}`;
+                      const text = `${post.title} — ${url}`;
+                      const wa = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                      window.open(wa, "_blank", "noopener,noreferrer");
+                    }}
                     className="text-sm font-mono text-gray-700 hover:text-primary transition-colors"
+                    aria-label="Share to WhatsApp"
                   >
-                    X
-                  </a>
-                  <a
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    WhatsApp
+                  </button>
+
+                  {/* LinkedIn */}
+                  <button
+                    onClick={() => {
+                      const url = window.location.origin + `/writing/${post.slug}`;
+                      const li = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                        url,
+                      )}`;
+                      window.open(li, "_blank", "noopener,noreferrer");
+                    }}
                     className="text-sm font-mono text-gray-700 hover:text-primary transition-colors"
-                  >
-                    Thread
-                  </a>
-                  <a
-                    href={`#`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-mono text-gray-700 hover:text-primary transition-colors"
+                    aria-label="Share to LinkedIn"
                   >
                     LinkedIn
-                  </a>
+                  </button>
+
+                  {/* Instagram: try Web Share API, fallback to copy link */}
+                  <InstagramShare post={post} />
                 </div>
               </div>
 
