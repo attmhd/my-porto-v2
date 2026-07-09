@@ -11,6 +11,7 @@ import ProjectsSection from "../components/admin/ProjectsSection";
 import SetupSection from "../components/admin/SetupSection";
 import TechStackSection from "../components/admin/TechStackSection";
 import ToolsSection from "../components/admin/ToolsSection";
+import BlogSection from "../components/admin/BlogSection";
 
 type TabKey =
   | "profile"
@@ -19,7 +20,8 @@ type TabKey =
   | "projects"
   | "tools"
   | "education"
-  | "certificates";
+  | "certificates"
+  | "blog";
 
 const tabs: { key: TabKey; label: string }[] = [
   { key: "profile", label: "Profile" },
@@ -29,6 +31,7 @@ const tabs: { key: TabKey; label: string }[] = [
   { key: "tools", label: "Tools" },
   { key: "education", label: "Education" },
   { key: "certificates", label: "Certificates" },
+  { key: "blog", label: "Blog" },
 ];
 
 const cardClass =
@@ -303,8 +306,8 @@ const Admin: React.FC = () => {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={`rounded-full px-4 py-2 text-sm transition-colors ${activeTab === tab.key
-                    ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                    : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+                  : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   }`}
               >
                 {tab.label}
@@ -436,6 +439,9 @@ const Admin: React.FC = () => {
                 }
               />
             </>
+          )}
+          {activeTab === "blog" && (
+            <BlogSection />
           )}
         </section>
       </div>
