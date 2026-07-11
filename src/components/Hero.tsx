@@ -57,7 +57,7 @@ const Hero: React.FC = () => {
             <p className="mb-4 text-lg leading-relaxed text-gray-600 dark:text-gray-400 md:text-xl">
               I build{" "}
               <span
-                className={`inline-block font-semibold text-gray-900 dark:text-white ${
+                className={`inline-block min-w-[18ch] font-semibold text-gray-900 dark:text-white ${
                   isFadingOut ? "animate-fade-out" : "animate-fade-in"
                 }`}
               >

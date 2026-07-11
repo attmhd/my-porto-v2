@@ -17,6 +17,9 @@ import {
   isSupabaseConfigured,
 } from "./supabaseClient";
 
+let cachedPortfolioData: PortfolioData | null = null;
+let inFlightLoad: Promise<PortfolioData> | null = null;
+
 // --- Mappers to bridge DB snake_case with JS camelCase ---
 
 function mapUserInfoFromDb(db: any): PortfolioUserInfo {
@@ -207,10 +210,20 @@ export function getPortfolioStorageLabel(): "Supabase" | "Local storage" {
  * If Supabase is not configured, it falls back to local storage.
  */
 export async function loadPortfolioData(): Promise<PortfolioData> {
-  const supabase = getSupabaseClient();
-  if (!supabase) {
-    return loadFromLocalStorage();
+  if (cachedPortfolioData) {
+    return clonePortfolioData(cachedPortfolioData);
   }
+  if (inFlightLoad) {
+    return clonePortfolioData(await inFlightLoad);
+  }
+
+  inFlightLoad = (async () => {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      const local = loadFromLocalStorage();
+      cachedPortfolioData = clonePortfolioData(local);
+      return local;
+    }
 
   try {
     const [
@@ -240,6 +253,7 @@ export async function loadPortfolioData(): Promise<PortfolioData> {
       // If no data exists in Supabase, seed from local storage/defaults
       const localData = loadFromLocalStorage();
       await savePortfolioData(localData);
+      cachedPortfolioData = clonePortfolioData(localData);
       return localData;
     }
 
@@ -264,23 +278,42 @@ export async function loadPortfolioData(): Promise<PortfolioData> {
     };
 
     saveToLocalStorage(portfolio);
+    cachedPortfolioData = clonePortfolioData(portfolio);
     return portfolio;
   } catch (err) {
     console.error("Unexpected error loading portfolio data:", err);
-    return loadFromLocalStorage();
+    const local = loadFromLocalStorage();
+    cachedPortfolioData = clonePortfolioData(local);
+    return local;
+  }
+  })();
+
+  try {
+    return clonePortfolioData(await inFlightLoad);
+  } finally {
+    inFlightLoad = null;
   }
 }
 
 /**
  * Saves portfolio data dynamically to Supabase.
- * This is called automatically by the PortfolioContext when data changes.
+ * Local storage is always updated; Supabase write runs only for authenticated users.
  */
 export async function savePortfolioData(data: PortfolioData): Promise<void> {
   const payload = clonePortfolioData(data);
   saveToLocalStorage(payload);
+  cachedPortfolioData = clonePortfolioData(payload);
 
   const supabase = getSupabaseClient();
   if (!supabase) {
+    return;
+  }
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+  if (sessionError || !session?.user) {
     return;
   }
 
@@ -351,5 +384,6 @@ export async function savePortfolioData(data: PortfolioData): Promise<void> {
 export async function resetPortfolioData(): Promise<PortfolioData> {
   const defaultData = clonePortfolioData(DEFAULT_PORTFOLIO_DATA);
   await savePortfolioData(defaultData);
+  cachedPortfolioData = clonePortfolioData(defaultData);
   return defaultData;
 }

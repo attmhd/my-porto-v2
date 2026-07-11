@@ -39,7 +39,7 @@ const cardClass =
   "rounded-2xl border border-gray-200 bg-white p-5 dark:border-white/[0.08] dark:bg-surface-dark";
 
 const AdminContent: React.FC = () => {
-  const { data, setData, resetData, isReady, storageLabel } = usePortfolio();
+  const { data, saveData, resetData, isReady, storageLabel } = usePortfolio();
   const [draft, setDraft] = useState<PortfolioData>(clonePortfolioData(data));
   const [activeTab, setActiveTab] = useState<TabKey>("profile");
   const [pages, setPages] = useState({
@@ -131,8 +131,8 @@ const AdminContent: React.FC = () => {
     window.setTimeout(() => setStatus("idle"), 1800);
   };
 
-  const save = () => {
-    setData(clonePortfolioData(draft));
+  const save = async () => {
+    await saveData(clonePortfolioData(draft));
     showSaved("Portfolio changes saved successfully!");
   };
 
@@ -269,7 +269,7 @@ const AdminContent: React.FC = () => {
                 Reset
               </button>
               <button
-                onClick={save}
+                onClick={() => void save()}
                 className="rounded-full bg-gray-900 px-5 py-2 text-sm font-semibold text-white dark:bg-white dark:text-gray-900"
               >
                 Save

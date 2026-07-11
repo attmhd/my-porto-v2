@@ -9,6 +9,7 @@ import {
   DEFAULT_PORTFOLIO_DATA,
   PortfolioData,
   clonePortfolioData,
+  loadPortfolioData as loadLocalPortfolioData,
 } from "../data/portfolio";
 import {
   getPortfolioStorageLabel,
@@ -20,6 +21,7 @@ import {
 interface PortfolioContextValue {
   data: PortfolioData;
   setData: React.Dispatch<React.SetStateAction<PortfolioData>>;
+  saveData: (nextData: PortfolioData) => Promise<void>;
   resetData: () => Promise<void>;
   isReady: boolean;
   storageLabel: "Supabase" | "Local storage";
@@ -31,7 +33,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [data, setData] = useState<PortfolioData>(
-    clonePortfolioData(DEFAULT_PORTFOLIO_DATA),
+    () => loadLocalPortfolioData(),
   );
   const [isReady, setIsReady] = useState(false);
   const [storageLabel, setStorageLabel] = useState<
@@ -59,18 +61,15 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (!isReady) {
-      return;
-    }
-
-    void savePortfolioData(data);
-  }, [data, isReady]);
-
   const value = useMemo<PortfolioContextValue>(
     () => ({
       data,
       setData,
+      saveData: async (nextData) => {
+        const payload = clonePortfolioData(nextData);
+        setData(payload);
+        await savePortfolioData(payload);
+      },
       resetData: async () => {
         const defaultData = await resetPortfolioData();
         setData(defaultData);
@@ -78,7 +77,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({
       isReady,
       storageLabel,
     }),
-    [data, isReady, storageLabel],
+    [data, isReady, storageLabel, setData],
   );
 
   return (
