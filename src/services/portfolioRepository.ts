@@ -225,67 +225,98 @@ export async function loadPortfolioData(): Promise<PortfolioData> {
       return local;
     }
 
-  try {
-    const [
-      userInfoRes,
-      projectsRes,
-      toolsRes,
-      techStackRes,
-      educationRes,
-      certificatesRes,
-      setupRes,
-    ] = await Promise.all([
-      supabase.from("user_info").select("*").eq("id", "current").maybeSingle(),
-      supabase.from("projects").select("*"),
-      supabase.from("tools").select("*"),
-      supabase.from("tech_stack").select("*"),
-      supabase.from("education").select("*"),
-      supabase.from("certificates").select("*"),
-      supabase.from("setup").select("*").eq("id", "current").maybeSingle(),
-    ]);
+    try {
+      const [
+        userInfoRes,
+        projectsRes,
+        toolsRes,
+        techStackRes,
+        educationRes,
+        certificatesRes,
+        setupRes,
+      ] = await Promise.all([
+        supabase.from("user_info").select("*").eq("id", "current").maybeSingle(),
+        supabase.from("projects").select("*"),
+        supabase.from("tools").select("*"),
+        supabase.from("tech_stack").select("*"),
+        supabase.from("education").select("*"),
+        supabase.from("certificates").select("*"),
+        supabase.from("setup").select("*").eq("id", "current").maybeSingle(),
+      ]);
 
-    const hasDbData =
-      userInfoRes.data ||
-      (projectsRes.data && projectsRes.data.length > 0) ||
-      (toolsRes.data && toolsRes.data.length > 0);
+      const hasError =
+        userInfoRes.error ||
+        projectsRes.error ||
+        toolsRes.error ||
+        techStackRes.error ||
+        educationRes.error ||
+        certificatesRes.error ||
+        setupRes.error;
 
-    if (!hasDbData) {
-      // If no data exists in Supabase, seed from local storage/defaults
-      const localData = loadFromLocalStorage();
-      await savePortfolioData(localData);
-      cachedPortfolioData = clonePortfolioData(localData);
-      return localData;
+      if (hasError) {
+        console.error("Error loading portfolio data from Supabase, falling back to local:", {
+          userInfo: userInfoRes.error,
+          projects: projectsRes.error,
+          tools: toolsRes.error,
+          techStack: techStackRes.error,
+          education: educationRes.error,
+          certificates: certificatesRes.error,
+          setup: setupRes.error,
+        });
+        const local = loadFromLocalStorage();
+        cachedPortfolioData = clonePortfolioData(local);
+        return local;
+      }
+
+      const hasDbData =
+        userInfoRes.data ||
+        (projectsRes.data && projectsRes.data.length > 0) ||
+        (toolsRes.data && toolsRes.data.length > 0);
+
+      if (!hasDbData) {
+        // If no data exists in Supabase, seed from local storage/defaults
+        const localData = loadFromLocalStorage();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          try {
+            await savePortfolioData(localData);
+          } catch (seedErr) {
+            console.error("Failed to seed database during load:", seedErr);
+          }
+        }
+        cachedPortfolioData = clonePortfolioData(localData);
+        return localData;
+      }
+
+      const portfolio: PortfolioData = {
+        userInfo: userInfoRes.data
+          ? mapUserInfoFromDb(userInfoRes.data)
+          : loadFromLocalStorage().userInfo,
+        projects: projectsRes.data ? projectsRes.data.map(mapProjectFromDb) : [],
+        tools: toolsRes.data ? toolsRes.data.map(mapToolFromDb) : [],
+        techStack: techStackRes.data
+          ? techStackRes.data.map(mapTechStackFromDb)
+          : [],
+        education: educationRes.data
+          ? educationRes.data.map(mapEducationFromDb)
+          : [],
+        certificates: certificatesRes.data
+          ? certificatesRes.data.map(mapCertificateFromDb)
+          : [],
+        setup: setupRes.data
+          ? mapSetupFromDb(setupRes.data)
+          : loadFromLocalStorage().setup,
+      };
+
+      saveToLocalStorage(portfolio);
+      cachedPortfolioData = clonePortfolioData(portfolio);
+      return portfolio;
+    } catch (err) {
+      console.error("Unexpected error loading portfolio data:", err);
+      const local = loadFromLocalStorage();
+      cachedPortfolioData = clonePortfolioData(local);
+      return local;
     }
-
-    const portfolio: PortfolioData = {
-      userInfo: userInfoRes.data
-        ? mapUserInfoFromDb(userInfoRes.data)
-        : loadFromLocalStorage().userInfo,
-      projects: projectsRes.data ? projectsRes.data.map(mapProjectFromDb) : [],
-      tools: toolsRes.data ? toolsRes.data.map(mapToolFromDb) : [],
-      techStack: techStackRes.data
-        ? techStackRes.data.map(mapTechStackFromDb)
-        : [],
-      education: educationRes.data
-        ? educationRes.data.map(mapEducationFromDb)
-        : [],
-      certificates: certificatesRes.data
-        ? certificatesRes.data.map(mapCertificateFromDb)
-        : [],
-      setup: setupRes.data
-        ? mapSetupFromDb(setupRes.data)
-        : loadFromLocalStorage().setup,
-    };
-
-    saveToLocalStorage(portfolio);
-    cachedPortfolioData = clonePortfolioData(portfolio);
-    return portfolio;
-  } catch (err) {
-    console.error("Unexpected error loading portfolio data:", err);
-    const local = loadFromLocalStorage();
-    cachedPortfolioData = clonePortfolioData(local);
-    return local;
-  }
   })();
 
   try {
@@ -313,8 +344,11 @@ export async function savePortfolioData(data: PortfolioData): Promise<void> {
     data: { session },
     error: sessionError,
   } = await supabase.auth.getSession();
-  if (sessionError || !session?.user) {
-    return;
+  if (sessionError) {
+    throw new Error(`Auth session error: ${sessionError.message}`);
+  }
+  if (!session?.user) {
+    throw new Error("Session expired or unauthorized. Please sign in again.");
   }
 
   try {
@@ -373,8 +407,9 @@ export async function savePortfolioData(data: PortfolioData): Promise<void> {
         .insert(payload.certificates.map(mapCertificateToDb));
       if (error) throw error;
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error("Unexpected error saving portfolio data to Supabase relations:", err);
+    throw new Error(err.message || "Failed to save portfolio data to Supabase.");
   }
 }
 

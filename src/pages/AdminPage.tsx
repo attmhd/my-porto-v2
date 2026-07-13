@@ -132,13 +132,21 @@ const AdminContent: React.FC = () => {
   };
 
   const save = async () => {
-    await saveData(clonePortfolioData(draft));
-    showSaved("Portfolio changes saved successfully!");
+    try {
+      await saveData(clonePortfolioData(draft));
+      showSaved("Portfolio changes saved successfully!");
+    } catch (err: any) {
+      showToast(err.message || "Failed to save changes.", "error");
+    }
   };
 
-  const reset = () => {
-    resetData();
-    showSaved("Portfolio changes reset to database values.");
+  const reset = async () => {
+    try {
+      await resetData();
+      showSaved("Portfolio changes reset to database values.");
+    } catch (err: any) {
+      showToast(err.message || "Failed to reset changes.", "error");
+    }
   };
 
   const sectionNote = useMemo(
