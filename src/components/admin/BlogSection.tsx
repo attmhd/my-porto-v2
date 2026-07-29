@@ -14,8 +14,22 @@ import {
     SectionHeader
 } from "./shared";
 import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 import { generateBlogContentStream } from "../../services/geminiService";
 import { useToast } from "./ToastContext";
+
+const MARKDOWN_PREVIEW_EXAMPLE = `# Status: Kurang Sopan
+
+### Analisis
+Penggunaan sapaan 'Bapak' kepada teman sebaya terasa terlalu formal dan berjarak, sehingga tidak selaras dengan prinsip Kato Mandata. Selain itu, penggunaan kata 'izin' kepada teman sebaya kurang lazim dalam pergaulan akrab masyarakat Minangkabau.
+
+### Saran Perbaikan
+> 'Sanak, ambo nio pai jalan-jalan ka Padang Japang dulu yo.'`;
+
+const DUMMY_MARKDOWN_RESPONSE =
+{
+  result: "Di tepi hutan yang rimbun, hiduplah dua sahabat yang sangat berbeda sifatnya: Monyet yang lincah namun pemalas, dan Kura-kura yang lambat namun sangat rajin. Monyet selalu membanggakan kecepatan dan keahlian memanjatnya, sementara Kura-kura lebih suka bekerja dalam diam.\n\nSuatu pagi, Monyet melihat seberkas cahaya kuning dari seberang sungai. Ternyata, itu adalah pohon pisang yang berbuah sangat lebat, tampak begitu menggoda dengan tandan-tandan emasnya.\n\n\"Wah, pisang itu pasti manis sekali!\" seru Monyet, melompat-lompat kegirangan. \"Andai saja aku bisa memetiknya sekarang juga!\" Namun, ia terlalu malas untuk menyeberangi sungai yang cukup lebar.\n\nKura-kura yang sedang berjemur di tepi sungai, turut memandangi pohon pisang itu. Dalam benaknya, ia berpikir, *\"Pasti menyenangkan jika aku bisa menanam pohon pisang seperti itu di dekat rumahku.\"*\n\nTanpa banyak bicara, Kura-kura mulai bergerak perlahan menuju sungai. Ia bertekad untuk menyeberang dan mencari bibit pohon pisang dari sana, meski tahu perjalanannya akan sangat panjang dan melelahkan.\n\nMonyet melihat Kura-kura yang mulai berenang dengan susah payah. Ia tertawa terbahak-bahak. \"Hahaha, Kura-kura! Dengan kecepatanmu itu, mungkin kau baru akan sampai besok pagi!\" ejeknya.\n\nKura-kura tidak menghiraukan ejekan Monyet. Ia terus mengayuh kakinya, satu demi satu, dengan penuh kesabaran. Baginya, yang terpenting adalah mencapai tujuannya, bukan seberapa cepat ia sampai.\n\nSetelah berjam-jam berjuang melawan arus, akhirnya Kura-kura berhasil mencapai tepi seberang. Ia mencari-cari di antara semak belukar dan menemukan sebuah tunas pisang kecil yang tampak sehat.\n\nDengan hati-hati, Kura-kura mencabut tunas itu, lalu kembali berenang menyeberangi sungai. Kali ini, ia harus membawa beban tambahan, membuat perjalanannya terasa jauh lebih berat.\n\nMonyet sudah tertidur pulas di pohonnya saat Kura-kura kembali. Kura-kura tidak berhenti, ia langsung menggali tanah di dekat rumahnya dan menanam tunas pisang itu dengan penuh kasih sayang.\n\nSetiap hari, Kura-kura menyiram tunas pisangnya, membersihkan gulma di sekitarnya, dan memastikan ia mendapatkan cukup sinar matahari. Sementara itu, Monyet masih bermalas-malasan, hanya memimpikan pisang tanpa usaha.\n\nBulan berganti bulan, tunas pisang Kura-kura tumbuh semakin tinggi dan besar. Daun-daunnya hijau subur, dan tak lama kemudian, munculah jantung pisang yang perlahan berubah menjadi tandan-tandan buah.\n\nAkhirnya, tiba saatnya pisang-pisang itu matang sempurna, berwarna kuning keemasan, dan mengeluarkan aroma manis yang semerbak. Kura-kura sangat bahagia melihat hasil kerja kerasnya.\n\nMonyet yang terbangun karena aroma manis itu, terkejut melihat pohon pisang Kura-kura yang berbuah lebat. Ia merasa menyesal karena dulu hanya mengejek dan tidak mau berusaha.\n\nKura-kura memetik pisang-pisang itu dan membagikannya kepada teman-teman hewan lain yang juga rajin bekerja. Mereka semua menikmati manisnya pisang hasil jerih payah Kura-kura.\n\nMonyet, dengan perut keroncongan, mendekati Kura-kura. \"Kura-kura, bolehkah aku meminta sedikit pisangmu?\" tanyanya malu-malu. Kura-kura tersenyum, *\"Tentu saja, Monyet. Tapi ingatlah, hasil terbaik selalu datang dari kerja keras dan kesabaran.\"* Monyet pun mengangguk, menyadari pelajaran berharga hari itu."
+}
 
 export const BlogSection: React.FC = () => {
     const { showToast } = useToast();
@@ -41,6 +55,9 @@ export const BlogSection: React.FC = () => {
     const [aiPrompt, setAiPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
     const [useMetadata, setUseMetadata] = useState(true);
+    const previewContent = content.includes("\\n")
+        ? content.replace(/\\n/g, "\n")
+        : content;
 
     useEffect(() => {
         fetchPosts();
@@ -69,6 +86,24 @@ export const BlogSection: React.FC = () => {
         setErrorMsg("");
         setEditorTab("write");
         setIsEditing(true);
+    };
+
+    const handleUsePreviewExample = () => {
+        setTitle("Preview Markdown Test");
+        setDescription("Contoh konten untuk testing visual preview ReactMarkdown.");
+        setTagsInput("testing, markdown, preview");
+        setContent(MARKDOWN_PREVIEW_EXAMPLE);
+        setEditorTab("preview");
+        setErrorMsg("");
+    };
+
+    const handleLoadDummyResponse = () => {
+        setTitle("Dummy API Markdown Response");
+        setDescription("Simulasi respons API untuk pengujian preview markdown.");
+        setTagsInput("testing, markdown, dummy-response");
+        setContent(DUMMY_MARKDOWN_RESPONSE.result);
+        setEditorTab("preview");
+        setErrorMsg("");
     };
 
     const handleEdit = (post: BlogPost) => {
@@ -389,10 +424,10 @@ export const BlogSection: React.FC = () => {
                                 <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">AI Writer Assistant</h4>
                             </div>
                             <span className="text-[10px] bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-mono font-semibold">
-                                Gemini-2.5-Flash
+                                Gemini-3.5-Flash
                             </span>
                         </div>
-                        
+
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                             Let AI draft or refine your article directly in the editor. Set custom instructions or let the AI write based on your current metadata.
                         </p>
@@ -487,7 +522,25 @@ export const BlogSection: React.FC = () => {
                                     Visual Preview
                                 </button>
                             </div>
-                            <span className="text-[10px] text-gray-400 pr-2 font-mono">Supports Markdown Syntax</span>
+                            <div className="flex items-center gap-2 pr-2">
+                                <button
+                                    type="button"
+                                    onClick={handleUsePreviewExample}
+                                    className="text-[10px] font-mono text-primary hover:underline"
+                                >
+                                    Use preview example
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleLoadDummyResponse}
+                                    className="text-[10px] font-mono text-primary hover:underline"
+                                >
+                                    Load dummy response
+                                </button>
+                                <span className="text-[10px] text-gray-400 font-mono">
+                                    Supports Markdown Syntax
+                                </span>
+                            </div>
                         </div>
 
                         {editorTab === "write" ? (
@@ -505,8 +558,10 @@ export const BlogSection: React.FC = () => {
                                 className="w-full rounded-xl border border-gray-200 dark:border-white/[0.08] bg-gray-50 dark:bg-white/[0.01] px-6 py-6 overflow-y-auto text-sm prose-content prose dark:prose-invert max-w-none"
                                 style={{ height: "450px" }}
                             >
-                                {content.trim() ? (
-                                    <ReactMarkdown>{content}</ReactMarkdown>
+                                {previewContent.trim() ? (
+                                    <ReactMarkdown remarkPlugins={[remarkBreaks]}>
+                                        {previewContent}
+                                    </ReactMarkdown>
                                 ) : (
                                     <p className="text-gray-400 italic">No content written yet.</p>
                                 )}

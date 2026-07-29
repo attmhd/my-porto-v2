@@ -43,7 +43,7 @@ const checkAndIncrementRateLimit = (): void => {
 
     // Fallback to in-memory rate limiting if localStorage is blocked (e.g. Incognito, private mode)
     console.warn("localStorage access failed, falling back to in-memory rate limiting:", error);
-    
+
     inMemoryTimestamps = inMemoryTimestamps.filter((time) => now - time < RATE_LIMIT_WINDOW_MS);
 
     if (inMemoryTimestamps.length >= RATE_LIMIT_COUNT) {
@@ -73,7 +73,6 @@ export const initializeChat = (): Chat => {
     model: "gemini-3.1-flash-lite",
     config: {
       systemInstruction: buildPortfolioSystemInstruction(portfolioData),
-      temperature: 0.7,
     },
   });
 
@@ -116,7 +115,7 @@ export const generateBlogContentStream = async (
 
   const ai = new GoogleGenAI({ apiKey: API_KEY });
 
-  const systemInstruction = 
+  const systemInstruction =
     "You are an expert developer and technical blogger. Write a high-quality, comprehensive, and engaging blog post in Markdown format. " +
     "Keep the writing professional, concise, clear, and informative. Use proper markdown headers (starting with h2, i.e. '##', since h1 is " +
     "usually reserved for the main post title), list items, bold text, and code blocks with language specifiers where appropriate. " +
@@ -140,11 +139,10 @@ export const generateBlogContentStream = async (
 
   try {
     const responseStream = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: [contentPrompt],
       config: {
         systemInstruction,
-        temperature: 0.7,
       },
     });
     return responseStream;
