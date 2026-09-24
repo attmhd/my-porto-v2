@@ -1,166 +1,236 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { FaDownload, FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  FaArrowRight,
+  FaBars,
+  FaMoon,
+  FaSearch,
+  FaSun,
+  FaTimes,
+} from "react-icons/fa";
 import { useTheme } from "../contexts/ThemeContext";
 import { usePortfolio } from "../contexts/PortfolioContext";
 
-const navLinks = [
-  { href: "/#home", label: "Home", isAnchor: true },
-  { href: "/#projects", label: "Projects", isAnchor: true },
-  { href: "/tools", label: "Tools", isAnchor: false },
-  { href: "/writing", label: "Writing", isAnchor: false },
-  { href: "/#experience", label: "Experience", isAnchor: true },
-];
+interface SearchResult {
+  id: string;
+  title: string;
+  meta: string;
+  href: string;
+}
 
-const Navbar: React.FC = () => {
+export const Navbar: React.FC = () => {
   const { data } = usePortfolio();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        const nextScrolled = window.scrollY > 20;
-        setScrolled((prev) => (prev === nextScrolled ? prev : nextScrolled));
-        ticking = false;
-      });
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setSearchOpen(true);
+      } else if (event.key === "/" && !isTyping) {
+        event.preventDefault();
+        setSearchOpen(true);
+      } else if (event.key === "Escape") {
+        setSearchOpen(false);
+        setMenuOpen(false);
+      }
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const closeMobile = () => setIsMobileMenuOpen(false);
+  useEffect(() => {
+    if (!searchOpen) return;
+    document.body.style.overflow = "hidden";
+    const frame = window.requestAnimationFrame(() => inputRef.current?.focus());
+    return () => {
+      window.cancelAnimationFrame(frame);
+      document.body.style.overflow = "";
+    };
+  }, [searchOpen]);
 
-  const linkProps = (link: (typeof navLinks)[0]) =>
-    link ? { rel: "noopener noreferrer" } : {};
+  const results = useMemo<SearchResult[]>(() => {
+    const normalized = query.trim().toLowerCase();
+    const allResults: SearchResult[] = [
+      ...data.projects.map((project) => ({
+        id: `project-${project.id}`,
+        title: project.title,
+        meta: project.category,
+        href: "/#projects",
+      })),
+      ...data.tools.map((tool) => ({
+        id: `tool-${tool.id}`,
+        title: tool.title,
+        meta: tool.category,
+        href: `/tools/${tool.slug}`,
+      })),
+      ...data.techStack.map((tech) => ({
+        id: `tech-${tech.name}`,
+        title: tech.name,
+        meta: tech.category,
+        href: "/#stack",
+      })),
+    ];
+
+    if (!normalized) return allResults.slice(0, 6);
+    return allResults
+      .filter((item) =>
+        `${item.title} ${item.meta}`.toLowerCase().includes(normalized),
+      )
+      .slice(0, 8);
+  }, [data.projects, data.techStack, data.tools, query]);
+
+  const closeSearch = () => {
+    setSearchOpen(false);
+    setQuery("");
+  };
+
+  const navLinks = [
+    { label: "Projects", href: "/#projects", anchor: true },
+    { label: "Stack", href: "/#stack", anchor: true },
+    { label: "Setup", href: "/#setup", anchor: true },
+    { label: "Experience", href: "/#experience", anchor: true },
+  ];
 
   return (
-    <nav className="fixed top-5 left-0 right-0 z-50 flex flex-col items-center pointer-events-none px-4">
-      {/* Pill */}
-      <div
-        className={`pointer-events-auto rounded-full px-5 py-2.5 md:px-6 md:py-2.5 transition-all duration-300 w-full max-w-xs md:max-w-fit ${scrolled
-          ? "bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.08] shadow-sm"
-          : "bg-white/50 dark:bg-black/50 backdrop-blur-md border border-gray-200/30 dark:border-white/[0.04]"
-          }`}
-      >
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-6 text-[13px] font-medium text-gray-500 dark:text-gray-500">
-          {navLinks.map((link) =>
-            link.isAnchor ? (
-              <a
-                key={link.label}
-                href={link.href}
-                {...linkProps(link)}
-                className="hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.label}
-                to={link.href}
-                className="hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                {link.label}
-              </Link>
-            ),
-          )}
+    <>
+      <header className="dn-navbar">
+        <div className="dn-container dn-navbar__inner">
+          <Link className="dn-wordmark" to="/" aria-label="Muhammad Attan home">
+            attmhd<span>.</span>
+          </Link>
 
-          <span className="h-3.5 w-px bg-gray-200 dark:bg-white/10" />
-
-          <button
-            onClick={toggleTheme}
-            className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? (
-              <FaSun className="text-sm" />
-            ) : (
-              <FaMoon className="text-sm" />
-            )}
-          </button>
-
-          <a
-            href={data.userInfo.cvUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-[13px] font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-white/[0.08] px-4 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-white/[0.15] transition-colors"
-          >
-            CV
-            <FaDownload className="text-[10px]" />
-          </a>
-        </div>
-
-        {/* Mobile */}
-        <div className="flex md:hidden items-center justify-between w-full">
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-gray-500 dark:text-gray-400 p-1 focus:outline-none hover:text-gray-900 dark:hover:text-white transition-colors"
-          >
-            {isMobileMenuOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
-          </button>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-gray-400 dark:text-gray-500"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <FaSun className="text-sm" />
-              ) : (
-                <FaMoon className="text-sm" />
-              )}
-            </button>
-
-            <a
-              href={data.userInfo.cvUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[12px] font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-white/[0.08] px-3 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-white/[0.15] transition-colors"
-            >
-              CV
-              <FaDownload className="text-[9px]" />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile dropdown */}
-      {isMobileMenuOpen && (
-        <div className="mt-3 pointer-events-auto w-full max-w-xs md:hidden">
-          <div className="bg-white/95 dark:bg-black/95 backdrop-blur-xl border border-gray-200/60 dark:border-white/[0.08] rounded-2xl p-2 flex flex-col text-[13px] font-medium text-gray-500 dark:text-gray-400">
-            {navLinks.map((link) =>
-              link.isAnchor ? (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  {...linkProps(link)}
-                  onClick={closeMobile}
-                  className="py-2.5 px-4 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/[0.05] rounded-xl transition-all"
-                >
-                  {link.label}
+          <nav className="dn-navbar__links" aria-label="Primary navigation">
+            {navLinks.map((item) =>
+              item.anchor ? (
+                <a key={item.label} href={item.href}>
+                  {item.label}
                 </a>
               ) : (
                 <Link
-                  key={link.label}
-                  to={link.href}
-                  onClick={closeMobile}
-                  className="py-2.5 px-4 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/[0.05] rounded-xl transition-all"
+                  key={item.label}
+                  to={item.href}
+                  aria-current={
+                    location.pathname.startsWith(item.href) ? "page" : undefined
+                  }
                 >
-                  {link.label}
+                  {item.label}
                 </Link>
               ),
             )}
+          </nav>
+
+          <div className="dn-navbar__actions">
+            <button
+              type="button"
+              className="dn-search-trigger"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search portfolio"
+            >
+              <FaSearch aria-hidden="true" />
+              <span>Search</span>
+              <kbd>Ctrl K</kbd>
+            </button>
+            <button
+              type="button"
+              className="dn-icon-button"
+              onClick={toggleTheme}
+              aria-label={theme === "dark" ? "Use light theme" : "Use dark theme"}
+            >
+              {theme === "dark" ? <FaSun /> : <FaMoon />}
+            </button>
+            <button
+              type="button"
+              className="dn-icon-button dn-menu-trigger"
+              onClick={() => setMenuOpen((current) => !current)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
+              aria-label="Toggle navigation"
+            >
+              {menuOpen ? <FaTimes /> : <FaBars />}
+            </button>
           </div>
         </div>
+
+        {menuOpen && (
+          <nav id="mobile-navigation" className="dn-mobile-nav" aria-label="Mobile navigation">
+            {navLinks.map((item) =>
+              item.anchor ? (
+                <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>
+                  {item.label}
+                </a>
+              ) : (
+                <Link key={item.label} to={item.href} onClick={() => setMenuOpen(false)}>
+                  {item.label}
+                </Link>
+              ),
+            )}
+          </nav>
+        )}
+      </header>
+
+      {searchOpen && (
+        <div
+          className="dn-command-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeSearch();
+          }}
+        >
+          <section
+            className="dn-command"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="search-title"
+          >
+            <h2 id="search-title" className="sr-only">
+              Search portfolio
+            </h2>
+            <div className="dn-command__input">
+              <FaSearch aria-hidden="true" />
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search projects, tools, or technology"
+                aria-label="Search projects, tools, or technology"
+              />
+              <button type="button" onClick={closeSearch} aria-label="Close search">
+                <FaTimes aria-hidden="true" />
+              </button>
+            </div>
+            <div className="dn-command__results">
+              {results.length ? (
+                results.map((result) => (
+                  <a key={result.id} href={result.href} onClick={closeSearch}>
+                    <span>
+                      <strong>{result.title}</strong>
+                      <small>{result.meta}</small>
+                    </span>
+                    <FaArrowRight aria-hidden="true" />
+                  </a>
+                ))
+              ) : (
+                <p className="dn-command__empty">No matching work found.</p>
+              )}
+            </div>
+            <p className="dn-command__hint">Press Esc to close</p>
+          </section>
+        </div>
       )}
-    </nav>
+    </>
   );
 };
 

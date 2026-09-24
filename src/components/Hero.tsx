@@ -1,144 +1,175 @@
-import React, { useEffect, useState } from "react";
-import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
-import { FaMedium, FaThreads, FaYoutube } from "react-icons/fa6";
+import React, { useEffect, useRef, useState } from "react";
+import { FaArrowRight, FaTerminal, FaTimes } from "react-icons/fa";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import { usePortfolio } from "../contexts/PortfolioContext";
 import Terminal from "./hero/Terminal";
 
-const ROTATING_WORDS = [
-  "scalable APIs",
-  "RAG pipelines",
-  "ML models",
-  "clean architecture",
-  "cloud infrastructure",
-];
-
-const Hero: React.FC = () => {
+export const Hero: React.FC = () => {
   const { data } = usePortfolio();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const terminalDialogRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const springX = useSpring(pointerX, { stiffness: 90, damping: 20 });
+  const springY = useSpring(pointerY, { stiffness: 90, damping: 20 });
+  const artX = useTransform(springX, [-1, 1], [-14, 14]);
+  const artY = useTransform(springY, [-1, 1], [-10, 10]);
+  const artRotate = useTransform(springX, [-1, 1], [-1.2, 1.2]);
 
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      setIsFadingOut(true);
-      window.setTimeout(() => {
-        setCurrentIndex((value) => (value + 1) % ROTATING_WORDS.length);
-        setIsFadingOut(false);
-      }, 500);
-    }, 3000);
+    if (!showTerminal) return;
 
-    return () => window.clearInterval(interval);
-  }, []);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowTerminal(false);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    terminalDialogRef.current?.focus();
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [showTerminal]);
+
+  const name = data.userInfo.name || "Muhammad Attan";
+  const role = data.userInfo.role || "Software Engineer";
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
+    if (reduceMotion) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2);
+    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2);
+  };
+
+  const resetPointer = () => {
+    pointerX.set(0);
+    pointerY.set(0);
+  };
 
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center overflow-hidden bg-dot-grid pt-20"
+      className="dn-hero"
+      aria-labelledby="hero-title"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetPointer}
     >
-      <div className="pointer-events-none absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.07] blur-[120px] dark:bg-primary/[0.04]" />
-
-      <div className="container relative z-10 mx-auto px-6">
-        <div className="flex flex-col items-start gap-12 lg:flex-row lg:gap-16">
-          <div className="max-w-xl shrink-0 lg:max-w-lg xl:max-w-xl">
-            <div className="mb-8 flex items-center gap-3">
-              <span className="font-mono text-sm tracking-wide text-primary">
-                &gt; {data.userInfo.role.toLowerCase()}
-              </span>
-              <span className="h-px max-w-[120px] flex-1 bg-gray-200 dark:bg-white/10" />
+      <div className="dn-hero__texture" aria-hidden="true" />
+      <div className="dn-container dn-hero__grid">
+        <motion.div
+          className="dn-hero__copy"
+          initial={{ opacity: 0, y: 34 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <p className="dn-kicker">{role}</p>
+          <h1 id="hero-title" className="dn-hero__title">
+            I build systems
+            <span>with rhythm.</span>
+          </h1>
+          <p className="dn-hero__intro">
+            Backend, AI, and infrastructure shaped into reliable digital
+            products.
+          </p>
+          <div className="dn-hero__actions">
+            <a className="dn-button dn-button--primary" href="#projects">
+              Explore work
+              <FaArrowRight aria-hidden="true" />
+            </a>
+            <button
+              className="dn-button dn-button--text"
+              type="button"
+              onClick={() => setShowTerminal(true)}
+            >
+              <FaTerminal aria-hidden="true" />
+              Open console
+            </button>
+          </div>
+          <dl className="dn-hero__meta" aria-label="Portfolio details">
+            <div>
+              <dt>Based in</dt>
+              <dd>{data.userInfo.location || "Indonesia"}</dd>
             </div>
-
-            <h1 className="mb-8 text-5xl font-display font-bold leading-[1.05] tracking-tight text-gray-900 dark:text-white md:text-7xl lg:text-6xl xl:text-7xl">
-              {data.userInfo.name.split(" ")[0]}
-              <br />
-              <span className="text-gray-400 dark:text-gray-600">
-                {data.userInfo.name.split(" ").slice(1).join(" ")}
-              </span>
-            </h1>
-
-            <p className="mb-4 text-lg leading-relaxed text-gray-600 dark:text-gray-400 md:text-xl">
-              I build{" "}
-              <span
-                className={`inline-block min-w-[18ch] font-semibold text-gray-900 dark:text-white ${
-                  isFadingOut ? "animate-fade-out" : "animate-fade-in"
-                }`}
-              >
-                {ROTATING_WORDS[currentIndex]}
-              </span>
-            </p>
-            <p className="mb-8 font-mono text-sm leading-relaxed text-gray-500 dark:text-gray-500">
-              with Python, Go, and modern tooling.
-            </p>
-
-            <div className="mb-8 flex items-center gap-2 text-sm text-gray-400 dark:text-gray-600">
-              <span>{data.userInfo.location}</span>
+            <div>
+              <dt>Working across</dt>
+              <dd>Software, AI, systems</dd>
             </div>
+          </dl>
+        </motion.div>
 
-            <div className="mb-10 flex flex-wrap items-center gap-4">
-              <a
-                href="#projects"
-                className="rounded-full bg-gray-900 px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
-              >
-                View Projects
-              </a>
-              <a
-                href={data.userInfo.cvUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-gray-300 px-7 py-3 text-sm font-semibold text-gray-700 transition-colors hover:border-gray-900 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:border-white dark:hover:text-white"
-              >
-                Download CV
-              </a>
-              <a
-                href={`mailto:${data.userInfo.email}`}
-                className="px-7 py-3 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-500 dark:hover:text-white"
-              >
-                Contact Me →
-              </a>
-            </div>
+        <motion.figure
+          className="dn-hero__art"
+          initial={{ opacity: 0, scale: 0.96, rotate: -2 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{ duration: 0.95, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          style={{ x: artX, y: artY, rotate: artRotate }}
+        >
+          <div className="dn-hero__disc" aria-hidden="true" />
+          <img
+            src="/art/digital-nusantara-hero.webp"
+            alt="Abstract composition of flowing sound waves and connected software nodes"
+            width="1122"
+            height="1402"
+            fetchPriority="high"
+          />
+          <figcaption>{name} / selected work</figcaption>
+        </motion.figure>
+      </div>
 
-            <div className="flex items-center gap-6">
-              <span className="text-xs font-mono uppercase tracking-wider text-gray-400 dark:text-gray-600">
-                Links
-              </span>
-              <span className="h-px w-8 bg-gray-200 dark:bg-white/10" />
-              <div className="flex gap-5 text-lg text-gray-400 dark:text-gray-600">
-                <a href="https://github.com/attmhd" target="_blank" rel="noopener noreferrer">
-                  <FaGithub />
-                </a>
-                <a href="https://linkedin.com/in/attmhd" target="_blank" rel="noopener noreferrer">
-                  <FaLinkedin />
-                </a>
-                <a href="https://attmhd.medium.com/" target="_blank" rel="noopener noreferrer">
-                  <FaMedium />
-                </a>
-                <a href="https://www.youtube.com/@attmhd" target="_blank" rel="noopener noreferrer">
-                  <FaYoutube />
-                </a>
-                <a
-                  href="https://www.instagram.com/tany.series"
-                  target="_blank"
-                  rel="noopener noreferrer"
+      <AnimatePresence>
+        {showTerminal && (
+          <motion.div
+            className="dn-dialog-backdrop"
+            role="presentation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.24 }}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setShowTerminal(false);
+            }}
+          >
+            <motion.div
+              ref={terminalDialogRef}
+              className="dn-terminal-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="terminal-title"
+              tabIndex={-1}
+              initial={{ opacity: 0, y: 26, scale: 0.975 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            >
+              <div className="dn-dialog-header">
+                <div>
+                  <p className="dn-dialog-label">Interactive console</p>
+                  <h2 id="terminal-title">Ask the portfolio</h2>
+                </div>
+                <button
+                  type="button"
+                  className="dn-icon-button"
+                  onClick={() => setShowTerminal(false)}
+                  aria-label="Close console"
                 >
-                  <FaInstagram />
-                </a>
-                <a href="https://www.threads.com/@attan_mhd" target="_blank" rel="noopener noreferrer">
-                  <FaThreads />
-                </a>
+                  <FaTimes aria-hidden="true" />
+                </button>
               </div>
-            </div>
-          </div>
-
-          <div className="min-w-0 w-full lg:flex-1">
-            <Terminal />
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute bottom-10 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-gray-400 dark:text-gray-600">
-          scroll
-        </span>
-        <div className="h-8 w-px bg-gradient-to-b from-gray-300 to-transparent dark:from-gray-600" />
-      </div>
+              <Terminal />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

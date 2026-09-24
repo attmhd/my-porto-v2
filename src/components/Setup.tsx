@@ -1,54 +1,31 @@
 import React from "react";
 import { usePortfolio } from "../contexts/PortfolioContext";
+import MotionReveal from "./MotionReveal";
 
-const Setup: React.FC = () => {
+export const Setup: React.FC = () => {
   const { data } = usePortfolio();
-  return (
-    <section id="setup" className="py-24 bg-white dark:bg-surface-dark/50">
-      <div className="container mx-auto px-6">
-        {/* Section header */}
-        <div className="max-w-3xl mb-16">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="font-mono text-sm text-primary tracking-wide">
-              &gt; setup
-            </span>
-            <span className="h-px flex-1 bg-gray-200 dark:bg-white/10 max-w-[120px]" />
-          </div>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
-            My Setup
-          </h2>
-          <p className="text-gray-500 dark:text-gray-500 max-w-lg">
-            The hardware, operating system, and tools I use for development.
-          </p>
-        </div>
+  const setupItems = [
+    { label: "Hardware", value: data.setup.hardware },
+    { label: "Operating system", value: data.setup.os },
+    { label: "Code editor", value: data.setup.codeEditor },
+  ];
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center text-center p-6 bg-gray-50/80 dark:bg-white/[0.02] border border-gray-200/60 dark:border-white/[0.06] rounded-xl">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Hardware
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-600">
-              {data.setup.hardware}
-            </p>
-          </div>
-          <div className="flex flex-col items-center text-center p-6 bg-gray-50/80 dark:bg-white/[0.02] border border-gray-200/60 dark:border-white/[0.06] rounded-xl">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Operating System
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-600">
-              {data.setup.os}
-            </p>
-          </div>
-          <div className="flex flex-col items-center text-center p-6 bg-gray-50/80 dark:bg-white/[0.02] border border-gray-200/60 dark:border-white/[0.06] rounded-xl">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Code Editor
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-600">
-              {data.setup.codeEditor}
-            </p>
-          </div>
+  return (
+    <section id="setup" className="dn-section dn-setup" aria-labelledby="setup-title">
+      <MotionReveal className="dn-container dn-setup__frame" direction="scale">
+        <div className="dn-setup__intro">
+          <p>Studio tools</p>
+          <h2 id="setup-title">A quiet setup for focused work.</h2>
         </div>
-      </div>
+        <dl>
+          {setupItems.map((item) => (
+            <div key={item.label}>
+              <dt>{item.label}</dt>
+              <dd>{item.value || "Updating soon"}</dd>
+            </div>
+          ))}
+        </dl>
+      </MotionReveal>
     </section>
   );
 };

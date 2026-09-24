@@ -20,16 +20,16 @@ function createCommands(data: PortfolioData): Record<string, () => string[]> {
     help: () => [
       "Available commands:",
       "",
-      "  whoami      — Who am I",
-      "  about       — About me",
-      "  skills      — Tech stack overview",
-      "  projects    — Featured projects",
-      "  education   — Education & experience",
-      "  contact     — Get in touch",
-      "  clear       — Clear terminal",
-      "  help        — Show this message",
+      "  whoami      - Who am I",
+      "  about       - About me",
+      "  skills      - Tech stack overview",
+      "  projects    - Featured projects",
+      "  education   - Education & experience",
+      "  contact     - Get in touch",
+      "  clear       - Clear terminal",
+      "  help        - Show this message",
     ],
-    whoami: () => [data.userInfo.name, data.userInfo.role, `📍 ${data.userInfo.location}`],
+    whoami: () => [data.userInfo.name, data.userInfo.role, data.userInfo.location],
     about: () => {
       const words = data.userInfo.about.split(" ");
       const lines: string[] = [];
@@ -65,7 +65,7 @@ function createCommands(data: PortfolioData): Record<string, () => string[]> {
       top.forEach((project, index) => {
         lines.push(`  ${String(index + 1).padStart(2, " ")}. ${project.title}`);
         lines.push(
-          `      ${project.category} — ${project.technologies.slice(0, 3).join(", ")}`,
+          `      ${project.category} - ${project.technologies.slice(0, 3).join(", ")}`,
         );
       });
       if (data.projects.length > 8) {
@@ -88,7 +88,7 @@ function createCommands(data: PortfolioData): Record<string, () => string[]> {
       `  GitHub    github.com/attmhd`,
       `  LinkedIn  linkedin.com/in/attmhd`,
       "",
-      "  Feel free to reach out!",
+      "  Feel free to reach out.",
     ],
   };
 }
@@ -186,7 +186,7 @@ const Terminal: React.FC = () => {
           <span className="h-3 w-3 rounded-full bg-[#28c840]" />
         </div>
         <span className="flex-1 -ml-8 text-center text-[11px] font-mono text-gray-500">
-          attmhd — portfolio
+          attmhd - portfolio
         </span>
       </div>
 

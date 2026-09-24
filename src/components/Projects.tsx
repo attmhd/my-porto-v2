@@ -1,258 +1,233 @@
-import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
-import { FiGithub, FiExternalLink } from "react-icons/fi";
+import React, { useEffect, useRef, useState } from "react";
+import { FaArrowRight, FaExternalLinkAlt, FaGithub, FaTimes } from "react-icons/fa";
+import { AnimatePresence, motion } from "motion/react";
 import { usePortfolio } from "../contexts/PortfolioContext";
 import { PortfolioProject } from "../data/portfolio";
+import MotionReveal from "./MotionReveal";
 
-const Projects: React.FC = () => {
+export const Projects: React.FC = () => {
   const { data } = usePortfolio();
   const [showAll, setShowAll] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<PortfolioProject | null>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+
   const categories = [
     "All",
-    ...Array.from(new Set(data.projects.map((p) => p.category))),
+    ...Array.from(new Set(data.projects.map((project) => project.category))),
   ];
-
   const filtered =
     activeCategory === "All"
       ? data.projects
-      : data.projects.filter((p) => p.category === activeCategory);
-
+      : data.projects.filter((project) => project.category === activeCategory);
   const visible = showAll ? filtered : filtered.slice(0, 6);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedProject(null);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    dialogRef.current?.focus();
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [selectedProject]);
 
   return (
     <>
-      <section
-        id="projects"
-        className="py-24 bg-gray-50/80 dark:bg-background-dark"
-      >
-        <div className="container mx-auto px-6">
-          {/* Section header */}
-          <div className="max-w-3xl mb-14">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="font-mono text-sm text-primary tracking-wide">
-                &gt; projects
-              </span>
-              <span className="h-px flex-1 bg-gray-200 dark:bg-white/10 max-w-[120px]" />
-            </div>
-            <h2 className="text-3xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
-              Featured Projects
-            </h2>
-            <p className="text-gray-500 dark:text-gray-500 max-w-lg">
-              Selected works demonstrating end-to-end engineering capabilities.
+      <section id="projects" className="dn-section dn-projects" aria-labelledby="projects-title">
+        <div className="dn-container">
+          <MotionReveal className="dn-section-heading">
+            <h2 id="projects-title">Selected systems and experiments.</h2>
+            <p>
+              Practical software shaped around real constraints, from backend
+              services to applied machine learning.
             </p>
-          </div>
+          </MotionReveal>
 
-          {/* Category filters */}
-          <div className="flex flex-wrap gap-2 mb-10">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setActiveCategory(cat);
-                  setShowAll(false);
-                }}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors border ${activeCategory === cat
-                    ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-gray-900 dark:border-white"
-                    : "bg-transparent text-gray-500 dark:text-gray-500 border-gray-200 dark:border-white/[0.08] hover:border-gray-400 dark:hover:border-white/20 hover:text-gray-900 dark:hover:text-white"
-                  }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+          {categories.length > 1 && (
+            <MotionReveal className="dn-filter" delay={0.08}>
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className={activeCategory === category ? "is-active" : ""}
+                  onClick={() => {
+                    setActiveCategory(category);
+                    setShowAll(false);
+                  }}
+                >
+                  {category}
+                </button>
+              ))}
+            </MotionReveal>
+          )}
 
-          {/* Project grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {visible.map((project) => (
-              <div
-                key={project.id}
-                className="group flex flex-col justify-between bg-white dark:bg-white/[0.02] border border-gray-200/80 dark:border-white/[0.06] rounded-2xl p-6 hover:border-gray-300 dark:hover:border-white/[0.12] transition-all duration-300 hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-none"
-              >
-                <div>
-                  {/* Category */}
-                  <span className="text-[11px] font-mono text-gray-400 dark:text-gray-600 mb-3 block">
-                    {project.category}
-                  </span>
-
-                  {/* Title */}
-                  <h3 className="text-base font-display font-bold text-gray-900 dark:text-white mb-2 leading-snug group-hover:text-primary transition-colors">
-                    {project.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-gray-500 dark:text-gray-500 leading-relaxed mb-5 line-clamp-2">
-                    {project.description}
-                  </p>
-
-                  {/* Tech tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {project.technologies.slice(0, 4).map((tech) => (
-                      <span
-                        key={tech}
-                        className="text-[11px] font-mono text-gray-500 dark:text-gray-600 bg-gray-50 dark:bg-white/[0.03] border border-gray-200/60 dark:border-white/[0.06] px-2 py-0.5 rounded-md"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                    {project.technologies.length > 4 && (
-                      <span className="text-[11px] font-mono text-gray-400 dark:text-gray-700 px-1 py-0.5">
-                        +{project.technologies.length - 4}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Action links */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/[0.04]">
+          {visible.length ? (
+            <div className="dn-project-grid">
+              {visible.map((project, index) => (
+                <motion.article
+                  key={project.id}
+                  className={`dn-project-card dn-project-card--${index % 3}`}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -48 : 48, y: 18 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  viewport={{ once: true, amount: 0.14 }}
+                  transition={{
+                    duration: 0.76,
+                    delay: (index % 3) * 0.08,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
                   <button
+                    type="button"
+                    className={`dn-project-card__visual dn-project-art--${index % 4}`}
                     onClick={() => setSelectedProject(project)}
-                    className="text-xs font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors flex items-center gap-1.5 group/btn"
+                    aria-label={`Open details for ${project.title}`}
                   >
-                    Details
-                    <span className="group-hover/btn:translate-x-0.5 transition-transform duration-200">
-                      →
-                    </span>
+                    <span>{project.category}</span>
                   </button>
-                  <div className="flex items-center gap-3">
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-all duration-200"
-                        title="View Source Code"
-                      >
-                        <FiGithub className="text-lg" />
-                      </a>
-                    )}
-                    {project.demoUrl && project.demoUrl !== "#" && (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-all duration-200"
-                        title="Live Demo"
-                      >
-                        <FiExternalLink className="text-lg" />
-                      </a>
-                    )}
+                  <div className="dn-project-card__body">
+                    <div className="dn-project-card__index">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
+                    <div>
+                      <h3>
+                        <button type="button" onClick={() => setSelectedProject(project)}>
+                          {project.title}
+                        </button>
+                      </h3>
+                      <p>{project.description}</p>
+                      <ul aria-label={`Technologies used in ${project.title}`}>
+                        {project.technologies.slice(0, 4).map((technology) => (
+                          <li key={technology}>{technology}</li>
+                        ))}
+                      </ul>
+                      <div className="dn-project-card__actions">
+                        <button type="button" onClick={() => setSelectedProject(project)}>
+                          View project <FaArrowRight aria-hidden="true" />
+                        </button>
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} source on GitHub`}
+                          >
+                            <FaGithub aria-hidden="true" />
+                          </a>
+                        )}
+                        {project.demoUrl && project.demoUrl !== "#" && (
+                          <a
+                            href={project.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} live demo`}
+                          >
+                            <FaExternalLinkAlt aria-hidden="true" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Show more / less */}
-          {filtered.length > 6 && !showAll && (
-            <div className="text-center mt-10">
-              <button
-                onClick={() => setShowAll(true)}
-                className="px-6 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-white/[0.08] rounded-full hover:border-gray-400 dark:hover:border-white/20 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Show all {filtered.length} projects
-              </button>
+                </motion.article>
+              ))}
+            </div>
+          ) : (
+            <div className="dn-empty-state">
+              <h3>No projects in this category yet.</h3>
+              <p>Choose another filter to explore the current portfolio.</p>
             </div>
           )}
-          {showAll && filtered.length > 6 && (
-            <div className="text-center mt-10">
-              <button
-                onClick={() => setShowAll(false)}
-                className="px-6 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-white/[0.08] rounded-full hover:border-gray-400 dark:hover:border-white/20 hover:text-gray-900 dark:hover:text-white transition-colors"
-              >
-                Show less
-              </button>
-            </div>
+
+          {filtered.length > 6 && (
+            <button
+              type="button"
+              className="dn-button dn-button--outline dn-projects__more"
+              onClick={() => setShowAll((current) => !current)}
+            >
+              {showAll ? "Show selected work" : `View all ${filtered.length} projects`}
+            </button>
           )}
         </div>
       </section>
 
-      {/* Detail modal */}
-      {selectedProject && (
-        <div
-          className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-0 md:p-4"
-          onClick={() => setSelectedProject(null)}
-        >
-          <div
-            className="bg-white dark:bg-surface-dark border border-gray-200/60 dark:border-white/[0.08] rounded-t-2xl md:rounded-2xl w-full md:max-w-lg max-h-[85vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            className="dn-dialog-backdrop"
+            role="presentation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.24 }}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setSelectedProject(null);
+            }}
           >
-            {/* Header */}
-            <div className="sticky top-0 bg-white/95 dark:bg-surface-dark/95 backdrop-blur-sm px-6 pt-6 pb-4 border-b border-gray-100 dark:border-white/[0.06] flex items-start justify-between gap-4">
-              <div>
-                <span className="text-[11px] font-mono text-gray-400 dark:text-gray-600 mb-2 block">
-                  {selectedProject.category}
-                </span>
-                <h3 className="text-xl font-display font-bold text-gray-900 dark:text-white tracking-tight leading-snug">
-                  {selectedProject.title}
-                </h3>
-              </div>
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="shrink-0 p-1.5 rounded-lg text-gray-400 dark:text-gray-600 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors mt-0.5"
-              >
-                <FaTimes className="text-sm" />
-              </button>
-            </div>
-
-            {/* Body */}
-            <div className="px-6 py-5 space-y-5">
-              {/* Full description */}
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                {selectedProject.description}
-              </p>
-
-              {/* All tech tags */}
-              <div>
-                <span className="text-[11px] font-mono text-gray-400 dark:text-gray-600 uppercase tracking-wider mb-2.5 block">
-                  Tech Stack
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedProject.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="text-[11px] font-mono text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-white/[0.03] border border-gray-200/60 dark:border-white/[0.06] px-2.5 py-1 rounded-md"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+            <motion.article
+              ref={dialogRef}
+              className="dn-project-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="project-dialog-title"
+              tabIndex={-1}
+              initial={{ opacity: 0, y: 28, scale: 0.975 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 250, damping: 25 }}
+            >
+              <div className="dn-project-dialog__art" aria-hidden="true" />
+              <div className="dn-project-dialog__content">
+                <div className="dn-dialog-header">
+                  <div>
+                    <p className="dn-dialog-label">{selectedProject.category}</p>
+                    <h2 id="project-dialog-title">{selectedProject.title}</h2>
+                  </div>
+                  <button
+                    type="button"
+                    className="dn-icon-button"
+                    onClick={() => setSelectedProject(null)}
+                    aria-label="Close project details"
+                  >
+                    <FaTimes aria-hidden="true" />
+                  </button>
                 </div>
-              </div>
-
-              {/* Links */}
-              {(selectedProject.demoUrl && selectedProject.demoUrl !== "#") ||
-                selectedProject.githubUrl ? (
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+                <p className="dn-project-dialog__description">{selectedProject.description}</p>
+                <ul className="dn-project-dialog__tech" aria-label="Technologies used">
+                  {selectedProject.technologies.map((technology) => (
+                    <li key={technology}>{technology}</li>
+                  ))}
+                </ul>
+                <div className="dn-project-dialog__actions">
                   {selectedProject.githubUrl && (
                     <a
+                      className="dn-button dn-button--outline"
                       href={selectedProject.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-white/[0.08] rounded-xl hover:border-gray-400 dark:hover:border-white/20 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors"
                     >
-                      <FiGithub className="text-base" />
-                      Source Code
+                      <FaGithub aria-hidden="true" /> Source
                     </a>
                   )}
-                  {selectedProject.demoUrl &&
-                    selectedProject.demoUrl !== "#" && (
-                      <a
-                        href={selectedProject.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors shadow-lg shadow-gray-900/10 dark:shadow-white/10"
-                      >
-                        <FiExternalLink className="text-base" />
-                        Live Demo
-                      </a>
-                    )}
+                  {selectedProject.demoUrl && selectedProject.demoUrl !== "#" && (
+                    <a
+                      className="dn-button dn-button--primary"
+                      href={selectedProject.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Live demo <FaExternalLinkAlt aria-hidden="true" />
+                    </a>
+                  )}
                 </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      )}
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
