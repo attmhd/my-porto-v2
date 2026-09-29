@@ -963,15 +963,26 @@ a {
 
 .dn-credentials__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
-  gap: clamp(3rem, 8vw, 8rem);
+  grid-template-columns: minmax(0, 1.1fr) minmax(19rem, 0.9fr);
+  align-items: start;
+  gap: clamp(3rem, 7vw, 7rem);
 }
 
 .dn-timeline > h3,
 .dn-certificates > h3 {
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
   font-size: 1rem;
   letter-spacing: -0.02em;
+}
+
+.dn-timeline > h3::before,
+.dn-certificates > h3::before {
+  display: inline-block;
+  width: 1.8rem;
+  height: 2px;
+  margin: 0 0.7rem 0.25rem 0;
+  background: var(--dn-accent);
+  content: "";
 }
 
 .dn-timeline ol,
@@ -1000,7 +1011,11 @@ a {
   display: grid;
   grid-template-columns: 4.2rem 1fr;
   gap: 2rem;
-  padding: 0 0 2.5rem;
+  padding: 0 0 2.4rem;
+}
+
+.dn-timeline li + li {
+  padding-top: 0.15rem;
 }
 
 .dn-timeline li::before {
@@ -1022,7 +1037,7 @@ a {
 
 .dn-timeline h4 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
   letter-spacing: -0.02em;
 }
 
@@ -1043,9 +1058,11 @@ a {
 }
 
 .dn-certificates {
+  border: 1px solid var(--dn-line);
   border-radius: var(--dn-radius);
   background: var(--dn-surface-strong);
   padding: clamp(1.5rem, 3vw, 2.4rem);
+  box-shadow: 0 1rem 2.5rem var(--dn-shadow);
 }
 
 .dn-certificates li + li {
@@ -1326,6 +1343,19 @@ a {
   .dn-project-dialog { grid-template-columns: 1fr; }
   .dn-project-dialog__art { min-height: 13rem; }
   .dn-project-dialog__content { max-height: 65vh; overflow-y: auto; }
+  .dn-credentials__grid { gap: 3.5rem; }
+  .dn-timeline li {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+    padding: 0 0 2rem 1.75rem;
+  }
+  .dn-timeline ol::before { left: 0.35rem; }
+  .dn-timeline li::before {
+    top: 0.4rem;
+    left: 0.08rem;
+  }
+  .dn-timeline time { display: block; }
+  .dn-certificates { padding: 1.25rem; }
   .dn-setup dl { grid-template-columns: 1fr; }
   .dn-setup dl div { border-right: 0; border-bottom: 1px solid var(--dn-line); padding: 1.25rem 2rem; }
   .dn-footer__main { align-items: flex-start; flex-direction: column; }
