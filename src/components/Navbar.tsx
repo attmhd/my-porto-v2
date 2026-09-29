@@ -61,6 +61,10 @@ export const Navbar: React.FC = () => {
     };
   }, [searchOpen]);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
   const results = useMemo<SearchResult[]>(() => {
     const normalized = query.trim().toLowerCase();
     const allResults: SearchResult[] = [
@@ -180,6 +184,15 @@ export const Navbar: React.FC = () => {
           </nav>
         )}
       </header>
+
+      {menuOpen && (
+        <button
+          type="button"
+          className="dn-mobile-nav-backdrop"
+          onClick={() => setMenuOpen(false)}
+          aria-label="Close navigation menu"
+        />
+      )}
 
       {searchOpen && (
         <div

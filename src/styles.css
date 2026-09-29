@@ -230,7 +230,7 @@ a {
 .dn-navbar__inner {
   display: grid;
   height: 100%;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 2.5rem;
 }
@@ -283,6 +283,7 @@ a {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  justify-self: end;
 }
 
 .dn-search-trigger {
@@ -314,7 +315,8 @@ a {
 }
 
 .dn-menu-trigger,
-.dn-mobile-nav {
+.dn-mobile-nav,
+.dn-mobile-nav-backdrop {
   display: none;
 }
 
@@ -1251,19 +1253,43 @@ a {
 @media (max-width: 900px) {
   .dn-navbar__links { display: none; }
   .dn-menu-trigger { display: inline-grid; }
+  .dn-navbar__actions { margin-left: auto; }
   .dn-mobile-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
     display: grid;
     border-top: 1px solid var(--dn-line);
-    background: var(--dn-bg);
+    background: var(--dn-surface);
+    box-shadow: 0 1.25rem 2.5rem var(--dn-shadow);
     padding: 0.75rem 1.25rem 1rem;
   }
   .dn-mobile-nav a {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
     border-bottom: 1px solid var(--dn-line);
     color: var(--dn-ink);
-    padding: 0.9rem 0;
+    padding: 0.7rem 0;
     font-size: 0.9rem;
     font-weight: 700;
   }
+  .dn-mobile-nav a:last-child { border-bottom: 0; }
+  .dn-mobile-nav a:hover { color: var(--dn-accent); }
+  .dn-mobile-nav-backdrop {
+    position: fixed;
+    z-index: 39;
+    display: block;
+    inset: var(--dn-nav-height) 0 0;
+    width: 100%;
+    border: 0;
+    background: rgba(18, 18, 15, 0.3);
+    cursor: default;
+  }
+  .dn-search-trigger span,
+  .dn-search-trigger kbd { display: none; }
+  .dn-search-trigger { width: 2.65rem; justify-content: center; padding: 0; }
   .dn-hero__grid {
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
     gap: 1rem;
@@ -1280,9 +1306,6 @@ a {
   .dn-section { padding-block: 5rem; }
   .dn-section-heading h2,
   .dn-stack__header h2 { font-size: clamp(2.5rem, 12vw, 4.2rem); }
-  .dn-search-trigger span,
-  .dn-search-trigger kbd { display: none; }
-  .dn-search-trigger { width: 2.65rem; justify-content: center; padding: 0; }
   .dn-hero { min-height: auto; }
   .dn-hero__grid {
     grid-template-columns: 1fr;
@@ -1314,6 +1337,7 @@ a {
   .dn-wordmark { font-size: 1rem; }
   .dn-navbar__inner { gap: 0.8rem; }
   .dn-navbar__actions { gap: 0.4rem; }
+  .dn-mobile-nav { padding-inline: 1rem; }
   .dn-hero__actions { align-items: stretch; flex-direction: column; }
   .dn-hero__actions .dn-button { width: 100%; }
   .dn-hero__meta { flex-direction: column; }
