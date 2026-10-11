@@ -86,6 +86,14 @@ a {
   color: var(--dn-ink);
 }
 
+.dn-reveal.is-visible {
+  animation: dn-reveal 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.dn-reveal--left { --dn-reveal-transform: translate(-2rem, 0.5rem); }
+.dn-reveal--right { --dn-reveal-transform: translate(2rem, 0.5rem); }
+.dn-reveal--scale { --dn-reveal-transform: translateY(1rem) scale(0.97); }
+
 .dn-section-heading {
   max-width: 58rem;
   margin-bottom: clamp(3rem, 6vw, 5.5rem);
@@ -355,6 +363,7 @@ a {
   z-index: 1;
   min-width: 0;
   padding-top: 0.5rem;
+  animation: dn-reveal 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .dn-hero__title {
@@ -422,6 +431,7 @@ a {
   width: 100%;
   place-items: center;
   margin: 0;
+  animation: dn-reveal 800ms 100ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .dn-hero__art img {
@@ -467,6 +477,14 @@ a {
   background: rgba(18, 18, 15, 0.66);
   padding: clamp(5.5rem, 12vh, 8rem) 1.25rem 2rem;
   backdrop-filter: blur(10px);
+}
+
+.dn-dialog-backdrop {
+  animation: dn-fade-in 180ms ease-out both;
+}
+
+.dn-project-dialog {
+  animation: dn-dialog-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .dn-command {
@@ -560,7 +578,6 @@ a {
   text-align: center;
 }
 
-.dn-terminal-dialog,
 .dn-project-dialog {
   width: min(100%, 60rem);
   border: 1px solid var(--dn-line);
@@ -568,10 +585,6 @@ a {
   outline: 0;
   background: var(--dn-surface);
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.3);
-}
-
-.dn-terminal-dialog {
-  padding: clamp(1rem, 3vw, 2rem);
 }
 
 .dn-dialog-header {
@@ -628,12 +641,17 @@ a {
 .dn-project-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: start;
   gap: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 4vw, 3rem);
 }
 
 .dn-project-card {
   grid-column: span 7;
+  animation: dn-reveal 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+.dn-project-card:nth-child(3n + 2) { animation-delay: 80ms; }
+.dn-project-card:nth-child(3n) { animation-delay: 160ms; }
 
 .dn-project-card--1 {
   grid-column: 8 / span 5;
@@ -653,9 +671,9 @@ a {
   border: 1px solid var(--dn-line);
   border-radius: var(--dn-radius);
   background-color: var(--dn-surface);
-  background-image: url("/art/digital-nusantara-projects.webp");
+  background-image: var(--dn-project-image);
   background-repeat: no-repeat;
-  background-size: 400% 100%;
+  background-size: 400% auto;
   box-shadow: 0 1.5rem 3rem var(--dn-shadow);
   cursor: pointer;
   transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -816,8 +834,8 @@ a {
 
 .dn-project-dialog__art {
   min-height: 32rem;
-  background: var(--dn-surface-strong) url("/art/digital-nusantara-projects.webp")
-    66% center / 400% 100% no-repeat;
+  background: var(--dn-surface-strong) var(--dn-project-image)
+    66.667% center / 400% auto no-repeat;
 }
 
 .dn-project-dialog__content {
@@ -1262,6 +1280,16 @@ a {
   50% { transform: translateY(-0.75rem); }
 }
 
+@keyframes dn-reveal {
+  from { opacity: 0; transform: var(--dn-reveal-transform, translateY(1.5rem)); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes dn-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes dn-dialog-enter {
   from { opacity: 0; transform: translateY(-0.75rem) scale(0.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -1381,6 +1409,7 @@ a {
   *, *::before, *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

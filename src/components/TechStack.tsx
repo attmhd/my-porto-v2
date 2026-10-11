@@ -1,10 +1,9 @@
 import React from "react";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import { getTechStackIcon } from "../data/portfolio";
-import MotionReveal from "./MotionReveal";
+import { PORTFOLIO_CONTENT as data, UI_CONTENT } from "../data/portfolioContent";
+import { getTechStackIcon } from "../data/techStackIcons";
+import Reveal from "./Reveal";
 
 export const TechStack: React.FC = () => {
-  const { data } = usePortfolio();
 
   const renderTechnology = (technology: (typeof data.techStack)[number], index: number) => {
     const Icon = getTechStackIcon(technology.iconName);
@@ -23,26 +22,25 @@ export const TechStack: React.FC = () => {
   return (
     <section id="stack" className="dn-section dn-stack" aria-labelledby="stack-title">
       <div className="dn-container">
-        <MotionReveal className="dn-stack__header">
-          <h2 id="stack-title">A working stack, tuned for scale.</h2>
+        <Reveal className="dn-stack__header">
+          <h2 id="stack-title">{UI_CONTENT.stack.title}</h2>
           <p>
-            Languages, frameworks, and infrastructure used across production
-            systems.
+            {UI_CONTENT.stack.description}
           </p>
-        </MotionReveal>
+        </Reveal>
 
         {data.techStack.length ? null : (
-          <p className="dn-stack__empty">The technology list is being updated.</p>
+          <p className="dn-stack__empty">{UI_CONTENT.stack.empty}</p>
         )}
       </div>
 
       {data.techStack.length > 0 && (
-        <MotionReveal
+        <Reveal
           className="dn-stack__flow"
           direction="scale"
           amount={0.1}
         >
-          <div className="dn-stack__track" role="region" aria-label="Technology stack in motion">
+          <div className="dn-stack__track" role="region" aria-label={UI_CONTENT.stack.regionLabel}>
             <ul className="dn-stack__group">
               {data.techStack.map(renderTechnology)}
             </ul>
@@ -50,7 +48,7 @@ export const TechStack: React.FC = () => {
               {data.techStack.map(renderTechnology)}
             </ul>
           </div>
-        </MotionReveal>
+        </Reveal>
       )}
     </section>
   );

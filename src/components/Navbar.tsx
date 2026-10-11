@@ -9,7 +9,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { useTheme } from "../contexts/ThemeContext";
-import { usePortfolio } from "../contexts/PortfolioContext";
+import { PORTFOLIO_CONTENT as data, UI_CONTENT } from "../data/portfolioContent";
 
 interface SearchResult {
   id: string;
@@ -19,7 +19,6 @@ interface SearchResult {
 }
 
 export const Navbar: React.FC = () => {
-  const { data } = usePortfolio();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,12 +73,6 @@ export const Navbar: React.FC = () => {
         meta: project.category,
         href: "/#projects",
       })),
-      ...data.tools.map((tool) => ({
-        id: `tool-${tool.id}`,
-        title: tool.title,
-        meta: tool.category,
-        href: `/tools/${tool.slug}`,
-      })),
       ...data.techStack.map((tech) => ({
         id: `tech-${tech.name}`,
         title: tech.name,
@@ -94,46 +87,29 @@ export const Navbar: React.FC = () => {
         `${item.title} ${item.meta}`.toLowerCase().includes(normalized),
       )
       .slice(0, 8);
-  }, [data.projects, data.techStack, data.tools, query]);
+  }, [data.projects, data.techStack, query]);
 
   const closeSearch = () => {
     setSearchOpen(false);
     setQuery("");
   };
 
-  const navLinks = [
-    { label: "Projects", href: "/#projects", anchor: true },
-    { label: "Stack", href: "/#stack", anchor: true },
-    { label: "Setup", href: "/#setup", anchor: true },
-    { label: "Experience", href: "/#experience", anchor: true },
-  ];
+  const navLinks = UI_CONTENT.navigation.links;
 
   return (
     <>
       <header className="dn-navbar">
         <div className="dn-container dn-navbar__inner">
-          <Link className="dn-wordmark" to="/" aria-label="Muhammad Attan home">
-            attmhd<span>.</span>
+          <Link className="dn-wordmark" to="/" aria-label={UI_CONTENT.navigation.homeLabel}>
+            {UI_CONTENT.navigation.wordmark}<span>.</span>
           </Link>
 
-          <nav className="dn-navbar__links" aria-label="Primary navigation">
-            {navLinks.map((item) =>
-              item.anchor ? (
-                <a key={item.label} href={item.href}>
-                  {item.label}
-                </a>
-              ) : (
-                <Link
-                  key={item.label}
-                  to={item.href}
-                  aria-current={
-                    location.pathname.startsWith(item.href) ? "page" : undefined
-                  }
-                >
-                  {item.label}
-                </Link>
-              ),
-            )}
+          <nav className="dn-navbar__links" aria-label={UI_CONTENT.navigation.primaryLabel}>
+            {navLinks.map((item) => (
+              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           <div className="dn-navbar__actions">
@@ -141,17 +117,17 @@ export const Navbar: React.FC = () => {
               type="button"
               className="dn-search-trigger"
               onClick={() => setSearchOpen(true)}
-              aria-label="Search portfolio"
+              aria-label={UI_CONTENT.search.title}
             >
               <FaSearch aria-hidden="true" />
-              <span>Search</span>
-              <kbd>Ctrl K</kbd>
+              <span>{UI_CONTENT.search.button}</span>
+              <kbd>{UI_CONTENT.search.shortcut}</kbd>
             </button>
             <button
               type="button"
               className="dn-icon-button"
               onClick={toggleTheme}
-              aria-label={theme === "dark" ? "Use light theme" : "Use dark theme"}
+              aria-label={theme === "dark" ? UI_CONTENT.navigation.lightThemeLabel : UI_CONTENT.navigation.darkThemeLabel}
             >
               {theme === "dark" ? <FaSun /> : <FaMoon />}
             </button>
@@ -161,7 +137,7 @@ export const Navbar: React.FC = () => {
               onClick={() => setMenuOpen((current) => !current)}
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
-              aria-label="Toggle navigation"
+              aria-label={UI_CONTENT.navigation.toggleLabel}
             >
               {menuOpen ? <FaTimes /> : <FaBars />}
             </button>
@@ -169,18 +145,12 @@ export const Navbar: React.FC = () => {
         </div>
 
         {menuOpen && (
-          <nav id="mobile-navigation" className="dn-mobile-nav" aria-label="Mobile navigation">
-            {navLinks.map((item) =>
-              item.anchor ? (
-                <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>
-                  {item.label}
-                </a>
-              ) : (
-                <Link key={item.label} to={item.href} onClick={() => setMenuOpen(false)}>
-                  {item.label}
-                </Link>
-              ),
-            )}
+          <nav id="mobile-navigation" className="dn-mobile-nav" aria-label={UI_CONTENT.navigation.mobileLabel}>
+            {navLinks.map((item) => (
+              <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>
+                {item.label}
+              </a>
+            ))}
           </nav>
         )}
       </header>
@@ -190,7 +160,7 @@ export const Navbar: React.FC = () => {
           type="button"
           className="dn-mobile-nav-backdrop"
           onClick={() => setMenuOpen(false)}
-          aria-label="Close navigation menu"
+          aria-label={UI_CONTENT.navigation.closeLabel}
         />
       )}
 
@@ -209,7 +179,7 @@ export const Navbar: React.FC = () => {
             aria-labelledby="search-title"
           >
             <h2 id="search-title" className="sr-only">
-              Search portfolio
+              {UI_CONTENT.search.title}
             </h2>
             <div className="dn-command__input">
               <FaSearch aria-hidden="true" />
@@ -217,10 +187,10 @@ export const Navbar: React.FC = () => {
                 ref={inputRef}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search projects, tools, or technology"
-                aria-label="Search projects, tools, or technology"
+                placeholder={UI_CONTENT.search.placeholder}
+                aria-label={UI_CONTENT.search.placeholder}
               />
-              <button type="button" onClick={closeSearch} aria-label="Close search">
+              <button type="button" onClick={closeSearch} aria-label={UI_CONTENT.search.close}>
                 <FaTimes aria-hidden="true" />
               </button>
             </div>
@@ -236,10 +206,10 @@ export const Navbar: React.FC = () => {
                   </a>
                 ))
               ) : (
-                <p className="dn-command__empty">No matching work found.</p>
+                <p className="dn-command__empty">{UI_CONTENT.search.empty}</p>
               )}
             </div>
-            <p className="dn-command__hint">Press Esc to close</p>
+            <p className="dn-command__hint">{UI_CONTENT.search.hint}</p>
           </section>
         </div>
       )}

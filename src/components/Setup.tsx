@@ -1,31 +1,30 @@
 import React from "react";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import MotionReveal from "./MotionReveal";
+import { PORTFOLIO_CONTENT as data, UI_CONTENT } from "../data/portfolioContent";
+import Reveal from "./Reveal";
 
 export const Setup: React.FC = () => {
-  const { data } = usePortfolio();
   const setupItems = [
-    { label: "Hardware", value: data.setup.hardware },
-    { label: "Operating system", value: data.setup.os },
-    { label: "Code editor", value: data.setup.codeEditor },
+    { label: UI_CONTENT.setup.hardwareLabel, value: data.setup.hardware },
+    { label: UI_CONTENT.setup.osLabel, value: data.setup.os },
+    { label: UI_CONTENT.setup.editorLabel, value: data.setup.codeEditor },
   ];
 
   return (
     <section id="setup" className="dn-section dn-setup" aria-labelledby="setup-title">
-      <MotionReveal className="dn-container dn-setup__frame" direction="scale">
+      <Reveal className="dn-container dn-setup__frame" direction="scale">
         <div className="dn-setup__intro">
-          <p>Studio tools</p>
-          <h2 id="setup-title">A quiet setup for focused work.</h2>
+          <p>{UI_CONTENT.setup.label}</p>
+          <h2 id="setup-title">{UI_CONTENT.setup.title}</h2>
         </div>
         <dl>
           {setupItems.map((item) => (
             <div key={item.label}>
               <dt>{item.label}</dt>
-              <dd>{item.value || "Updating soon"}</dd>
+              <dd>{item.value || UI_CONTENT.setup.empty}</dd>
             </div>
           ))}
         </dl>
-      </MotionReveal>
+      </Reveal>
     </section>
   );
 };

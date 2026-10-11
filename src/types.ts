@@ -1,29 +1,30 @@
-import { IconType } from "react-icons";
+export interface PortfolioUserInfo {
+  name: string;
+  role: string;
+  tagline: string;
+  about: string;
+  location: string;
+  email: string;
+  cvUrl: string;
+}
 
-export interface Project {
+export interface PortfolioProject {
   id: string;
   title: string;
   description: string;
   technologies: string[];
   githubUrl?: string;
   demoUrl?: string;
-  category: "AI/ML" | "Backend" | "Data Science" | "DevOps" | "System Design";
+  category: string;
 }
 
-export interface Tool {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  githubUrl?: string;
-  demoUrl?: string;
-  category: "Browser Extension" | "Automation" | "Utility" | "Web Tool";
-  features: string[];
-  installation: string;
-  usage: string;
+export interface PortfolioTechStackItem {
+  name: string;
+  iconName: string;
+  category: string;
 }
 
-export interface Education {
+export interface PortfolioEducation {
   id: string;
   institution: string;
   degree: string;
@@ -31,7 +32,7 @@ export interface Education {
   description?: string;
 }
 
-export interface Certificate {
+export interface PortfolioCertificate {
   id: string;
   name: string;
   issuer: string;
@@ -39,14 +40,17 @@ export interface Certificate {
   url: string;
 }
 
-export interface TechStackItem {
-  name: string;
-  icon: IconType;
-  category: "Language" | "Framework" | "Tool" | "Cloud";
+export interface PortfolioSetup {
+  hardware: string;
+  os: string;
+  codeEditor: string;
 }
 
-export interface ChatMessage {
-  role: "user" | "model";
-  text: string;
-  timestamp: Date;
+export interface PortfolioData {
+  userInfo: PortfolioUserInfo;
+  projects: PortfolioProject[];
+  techStack: PortfolioTechStackItem[];
+  education: PortfolioEducation[];
+  certificates: PortfolioCertificate[];
+  setup: PortfolioSetup;
 }

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { FaArrowRight, FaExternalLinkAlt } from "react-icons/fa";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import MotionReveal from "./MotionReveal";
+import { PORTFOLIO_CONTENT as data, UI_CONTENT } from "../data/portfolioContent";
+import Reveal from "./Reveal";
 
 export const Credentials: React.FC = () => {
-  const { data } = usePortfolio();
   const [showAllEducation, setShowAllEducation] = useState(false);
   const [showAllCertificates, setShowAllCertificates] = useState(false);
 
@@ -16,16 +15,16 @@ export const Credentials: React.FC = () => {
   return (
     <section id="experience" className="dn-section dn-credentials" aria-labelledby="experience-title">
       <div className="dn-container">
-        <MotionReveal
+        <Reveal
           className="dn-section-heading dn-section-heading--compact"
         >
-          <h2 id="experience-title">Learning through building.</h2>
-          <p>Education and credentials that support the work shown above.</p>
-        </MotionReveal>
+          <h2 id="experience-title">{UI_CONTENT.credentials.title}</h2>
+          <p>{data.userInfo.about}</p>
+        </Reveal>
 
         <div className="dn-credentials__grid">
-          <MotionReveal className="dn-timeline" direction="left">
-            <h3>Education and experience</h3>
+          <Reveal className="dn-timeline" direction="left">
+            <h3>{UI_CONTENT.credentials.educationTitle}</h3>
             {educationItems.length ? (
               <ol>
                 {educationItems.map((item) => (
@@ -40,7 +39,7 @@ export const Credentials: React.FC = () => {
                 ))}
               </ol>
             ) : (
-              <p className="dn-muted">Education details are being updated.</p>
+              <p className="dn-muted">{UI_CONTENT.credentials.educationEmpty}</p>
             )}
             {data.education.length > 3 && (
               <button
@@ -48,14 +47,14 @@ export const Credentials: React.FC = () => {
                 type="button"
                 onClick={() => setShowAllEducation((current) => !current)}
               >
-                {showAllEducation ? "Show selected entries" : "View full history"}
+                {showAllEducation ? UI_CONTENT.credentials.showEducation : UI_CONTENT.credentials.allEducation}
                 <FaArrowRight aria-hidden="true" />
               </button>
             )}
-          </MotionReveal>
+          </Reveal>
 
-          <MotionReveal className="dn-certificates" direction="right" delay={0.1}>
-            <h3>Professional certificates</h3>
+          <Reveal className="dn-certificates" direction="right" delay={0.1}>
+            <h3>{UI_CONTENT.credentials.certificatesTitle}</h3>
             {certificateItems.length ? (
               <ul>
                 {certificateItems.map((certificate) => (
@@ -71,7 +70,7 @@ export const Credentials: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <p className="dn-muted">Certificate details are being updated.</p>
+              <p className="dn-muted">{UI_CONTENT.credentials.certificatesEmpty}</p>
             )}
             {data.certificates.length > 5 && (
               <button
@@ -79,11 +78,11 @@ export const Credentials: React.FC = () => {
                 type="button"
                 onClick={() => setShowAllCertificates((current) => !current)}
               >
-                {showAllCertificates ? "Show selected certificates" : "View all certificates"}
+                {showAllCertificates ? UI_CONTENT.credentials.showCertificates : UI_CONTENT.credentials.allCertificates}
                 <FaArrowRight aria-hidden="true" />
               </button>
             )}
-          </MotionReveal>
+          </Reveal>
         </div>
       </div>
     </section>

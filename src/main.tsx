@@ -5,7 +5,6 @@ import App from "./App";
 import "./styles.css";
 
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { PortfolioProvider } from "./contexts/PortfolioContext";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -17,9 +16,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <PortfolioProvider>
-          <App />
-        </PortfolioProvider>
+        <App />
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,

@@ -6,44 +6,41 @@ import {
   FaMedium,
   FaYoutube,
 } from "react-icons/fa";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import MotionReveal from "./MotionReveal";
+import { PORTFOLIO_CONTENT as data, UI_CONTENT, SOCIAL_CONTENT } from "../data/portfolioContent";
+import Reveal from "./Reveal";
 
-const socialLinks = [
-  { label: "GitHub", href: "https://github.com/attmhd", icon: FaGithub },
-  { label: "LinkedIn", href: "https://linkedin.com/in/attmhd", icon: FaLinkedin },
-  { label: "Medium", href: "https://attmhd.medium.com/", icon: FaMedium },
-  { label: "YouTube", href: "https://www.youtube.com/@attmhd", icon: FaYoutube },
-];
+const socialIcons = { GitHub: FaGithub, LinkedIn: FaLinkedin, Medium: FaMedium, YouTube: FaYoutube };
 
 export const Footer: React.FC = () => {
-  const { data } = usePortfolio();
-  const email = data.userInfo.email || "hello@attmhd.me";
+  const email = data.userInfo.email;
 
   return (
     <footer className="dn-footer">
       <div className="dn-container">
-        <MotionReveal className="dn-footer__main">
+        <Reveal className="dn-footer__main">
           <div>
-            <p>Have a system worth building?</p>
-            <h2>Let&apos;s make it clear, useful, and durable.</h2>
+            <p>{UI_CONTENT.footer.availability}</p>
+            <h2>{UI_CONTENT.footer.title}</h2>
           </div>
           <a className="dn-footer__contact" href={`mailto:${email}`}>
-            Start a conversation
+            {UI_CONTENT.footer.contact}
             <FaArrowRight aria-hidden="true" />
           </a>
-        </MotionReveal>
-        <MotionReveal className="dn-footer__base" delay={0.1}>
-          <p>attmhd / software engineer</p>
-          <nav aria-label="Social links">
-            {socialLinks.map(({ label, href, icon: Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
-                <Icon aria-hidden="true" />
-              </a>
-            ))}
+        </Reveal>
+        <Reveal className="dn-footer__base" delay={0.1}>
+          <p>{UI_CONTENT.footer.signature}</p>
+          <nav aria-label={UI_CONTENT.footer.socialsLabel}>
+            {SOCIAL_CONTENT.map(({ label, href, icon }) => {
+              const Icon = socialIcons[icon];
+              return (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                  <Icon aria-hidden="true" />
+                </a>
+              );
+            })}
           </nav>
-          <p>{new Date().getFullYear()} / Indonesia</p>
-        </MotionReveal>
+          <p>{new Date().getFullYear()} / {UI_CONTENT.footer.country}</p>
+        </Reveal>
       </div>
     </footer>
   );

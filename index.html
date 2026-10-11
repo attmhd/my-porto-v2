@@ -3,50 +3,50 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Muhammad Attan - Software Engineer</title>
+        <title>%PORTFOLIO_TITLE%</title>
         <meta
             name="description"
-            content="Muhammad Attan is a Software Engineer specializing in backend development, AI, and scalable systems. Explore projects in RAG pipelines, ML models, and cloud infrastructure."
+            content="%PORTFOLIO_DESCRIPTION%"
         />
         <meta
             name="keywords"
-            content="Muhammad Attan, Software Engineer, Backend Developer, AI Engineer, Python, Go, FastAPI, TensorFlow, Machine Learning, Cloud Infrastructure, Portfolio"
+            content="%PORTFOLIO_KEYWORDS%"
         />
-        <meta name="author" content="Muhammad Attan" />
+        <meta name="author" content="%PORTFOLIO_NAME%" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://attmhd.me" />
+        <link rel="canonical" href="%PORTFOLIO_SITE_URL%" />
 
         <!-- Open Graph / Facebook, LinkedIn, Instagram -->
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://attmhd.me" />
-        <meta property="og:site_name" content="Muhammad Attan" />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:url" content="%PORTFOLIO_SITE_URL%" />
+        <meta property="og:site_name" content="%PORTFOLIO_NAME%" />
+        <meta property="og:locale" content="%PORTFOLIO_LOCALE%" />
         <meta
             property="og:title"
-            content="Muhammad Attan - Software Engineer"
+            content="%PORTFOLIO_TITLE%"
         />
         <meta
             property="og:description"
-            content="Muhammad Attan is a Software Engineer specializing in backend development, AI, and scalable systems. Explore projects in RAG pipelines, ML models, and cloud infrastructure."
+            content="%PORTFOLIO_SOCIAL_DESCRIPTION%"
         />
-        <meta property="og:image" content="https://attmhd.me/tangent.png" />
+        <meta property="og:image" content="%PORTFOLIO_IMAGE_URL%" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://attmhd.me" />
+        <meta property="twitter:url" content="%PORTFOLIO_SITE_URL%" />
         <meta
             property="twitter:title"
-            content="Muhammad Attan - Software Engineer"
+            content="%PORTFOLIO_TITLE%"
         />
         <meta
             property="twitter:description"
-            content="Muhammad Attan is a Software Engineer specializing in backend development, AI, and scalable systems. Explore projects in RAG pipelines, ML models, and cloud infrastructure."
+            content="%PORTFOLIO_SOCIAL_DESCRIPTION%"
         />
         <meta
             property="twitter:image"
-            content="https://attmhd.me/tangent.png"
+            content="%PORTFOLIO_IMAGE_URL%"
         />
 
         <meta
@@ -54,8 +54,7 @@
             content="jFNNqgE9jf_DuHd-bOUenFsew7ugcDAzAEf5gRDmnWg"
         />
 
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" href="/tangent.png" />
+        <link rel="icon" type="image/png" href="%PORTFOLIO_IMAGE_PATH%" />
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -164,294 +163,10 @@
                 background: #555;
             }
 
-            /* Dot grid background */
-            .bg-dot-grid {
-                background-image: radial-gradient(
-                    circle,
-                    rgba(148, 163, 184, 0.15) 1px,
-                    transparent 1px
-                );
-                background-size: 24px 24px;
-            }
-            .dark .bg-dot-grid {
-                background-image: radial-gradient(
-                    circle,
-                    rgba(255, 255, 255, 0.04) 1px,
-                    transparent 1px
-                );
-            }
-
-            /* ── Prose content (Medium-style) ── */
-            .prose-content {
-                font-size: 1rem;
-                line-height: 1.9;
-                color: #1f2937;
-            }
-            .dark .prose-content {
-                color: #d1d5db;
-            }
-
-            /* Headings */
-            .prose-content h1,
-            .prose-content h2,
-            .prose-content h3,
-            .prose-content h4 {
-                font-family: "Plus Jakarta Sans", sans-serif;
-                font-weight: 700;
-                color: #111827;
-                line-height: 1.25;
-                letter-spacing: -0.02em;
-                margin-top: 3em;
-                margin-bottom: 1em;
-            }
-            .dark .prose-content h1,
-            .dark .prose-content h2,
-            .dark .prose-content h3,
-            .dark .prose-content h4 {
-                color: #f9fafb;
-            }
-            .prose-content h1 {
-                font-size: 1.75em;
-            }
-            .prose-content h2 {
-                font-size: 1.375em;
-                padding-bottom: 0.6em;
-                border-bottom: 1px solid #e5e7eb;
-            }
-            .dark .prose-content h2 {
-                border-bottom-color: rgba(255, 255, 255, 0.06);
-            }
-            .prose-content h3 {
-                font-size: 1.125em;
-            }
-            .prose-content h4 {
-                font-size: 1em;
-            }
-
-            /* Paragraph */
-            .prose-content p {
-                margin-top: 1.75em;
-                margin-bottom: 1.75em;
-            }
-            .prose-content p:first-child {
-                margin-top: 0;
-            }
-
-            /* Links */
-            .prose-content a {
-                color: #3b82f6;
-                text-decoration: underline;
-                text-underline-offset: 3px;
-                text-decoration-thickness: 1px;
-            }
-            .prose-content a:hover {
-                color: #2563eb;
-            }
-
-            /* Strong / em */
-            .prose-content strong {
-                font-weight: 700;
-                color: #111827;
-            }
-            .dark .prose-content strong {
-                color: #f9fafb;
-            }
-            .prose-content em {
-                font-style: italic;
-            }
-
-            /* Lists */
-            .prose-content ul,
-            .prose-content ol {
-                margin-top: 1.5em;
-                margin-bottom: 1.5em;
-                padding-left: 1.75em;
-            }
-            .prose-content ul {
-                list-style-type: disc;
-            }
-            .prose-content ol {
-                list-style-type: decimal;
-            }
-            .prose-content li {
-                margin-top: 0.5em;
-                margin-bottom: 0.5em;
-            }
-            .prose-content li > p {
-                margin-top: 0.6em;
-                margin-bottom: 0.6em;
-            }
-
-            /* Inline code */
-            .prose-content :not(pre) > code {
-                font-family: "Fira Code", "Cascadia Code", "Menlo", monospace;
-                font-size: 0.85em;
-                font-weight: 500;
-                color: #3b82f6;
-                background-color: rgba(59, 130, 246, 0.08);
-                border: 1px solid rgba(59, 130, 246, 0.18);
-                border-radius: 5px;
-                padding: 0.15em 0.45em;
-            }
-            .dark .prose-content :not(pre) > code {
-                background-color: rgba(59, 130, 246, 0.12);
-                border-color: rgba(59, 130, 246, 0.22);
-            }
-
-            /* Code block */
-            .prose-content pre {
-                position: relative;
-                background-color: #0d1117;
-                border: 1px solid rgba(255, 255, 255, 0.06);
-                border-radius: 12px;
-                overflow-x: auto;
-                margin-top: 2.5em;
-                margin-bottom: 2.5em;
-                padding: 1.5em 1.75em;
-            }
-            .prose-content pre code {
-                font-family: "Fira Code", "Cascadia Code", "Menlo", monospace;
-                font-size: 0.85em;
-                line-height: 1.8;
-                color: #e6edf3;
-                background: none;
-                border: none;
-                padding: 0;
-            }
-
-            /* Blockquote */
-            .prose-content blockquote {
-                margin: 2.5em 0;
-                padding: 1.25em 1.75em;
-                border-left: 3px solid #3b82f6;
-                background-color: rgba(59, 130, 246, 0.04);
-                border-radius: 0 8px 8px 0;
-                font-style: italic;
-                color: #4b5563;
-            }
-            .dark .prose-content blockquote {
-                background-color: rgba(59, 130, 246, 0.06);
-                color: #9ca3af;
-            }
-            .prose-content blockquote p {
-                margin: 0;
-            }
-
-            /* Horizontal rule */
-            .prose-content hr {
-                border: none;
-                border-top: 1px solid #e5e7eb;
-                margin: 3.5em 0;
-            }
-            .dark .prose-content hr {
-                border-top-color: rgba(255, 255, 255, 0.06);
-            }
-
-            /* Images */
-            .prose-content img {
-                border-radius: 12px;
-                margin-top: 2.5em;
-                margin-bottom: 2.5em;
-                max-width: 100%;
-            }
-
-            /* Tables */
-            .prose-content table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 2.5em 0;
-                font-size: 0.9em;
-            }
-            .prose-content th {
-                text-align: left;
-                font-weight: 600;
-                color: #111827;
-                border-bottom: 2px solid #e5e7eb;
-                padding: 0.75em 1.25em;
-            }
-            .dark .prose-content th {
-                color: #f9fafb;
-                border-bottom-color: rgba(255, 255, 255, 0.08);
-            }
-            .prose-content td {
-                border-bottom: 1px solid #e5e7eb;
-                padding: 0.75em 1.25em;
-                color: #374151;
-            }
-            .dark .prose-content td {
-                border-bottom-color: rgba(255, 255, 255, 0.06);
-                color: #d1d5db;
-            }
-
-            /* Hide scrollbar utility */
-            .scrollbar-hide::-webkit-scrollbar {
-                display: none;
-            }
-            .scrollbar-hide {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-
-            /* Line clamp */
-            .line-clamp-2 {
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
         </style>
-        <script type="importmap">
-            {
-                "imports": {
-                    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-                    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-                    "react/": "https://esm.sh/react@^19.2.3/",
-                    "react": "https://esm.sh/react@^19.2.3",
-                    "react-icons/": "https://esm.sh/react-icons@^5.5.0/",
-                    "react-icons": "https://esm.sh/react-icons@^5.5.0",
-                    "react-markdown": "https://esm.sh/react-markdown@9?bundle"
-                }
-            }
-        </script>
 
         <!-- JSON-LD Structured Data -->
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "Person",
-                "name": "Muhammad Attan",
-                "jobTitle": "Software Engineer",
-                "description": "I am a final-year Informatics Engineering student specializing in Backend Development and Artificial Intelligence, with a focus on business-driven development, clean architecture, and scalable system design.",
-                "address": {
-                    "@type": "PostalAddress",
-                    "addressLocality": "Padang",
-                    "addressCountry": "Indonesia"
-                },
-                "email": "attmhd2.work@gmail.com",
-                "sameAs": [
-                    "https://github.com/attmhd",
-                    "https://linkedin.com/in/attmhd",
-                    "https://attmhd.medium.com/",
-                    "https://www.youtube.com/@attmhd",
-                    "https://www.instagram.com/tany.series",
-                    "https://www.threads.com/@attan_mhd"
-                ],
-                "knowsAbout": [
-                    "Backend Development",
-                    "Artificial Intelligence",
-                    "Machine Learning",
-                    "Python",
-                    "Go",
-                    "FastAPI",
-                    "TensorFlow",
-                    "Cloud Infrastructure"
-                ],
-                "alumniOf": {
-                    "@type": "EducationalOrganization",
-                    "name": "Padang Institute of Technology"
-                }
-            }
-        </script>
+        <script type="application/ld+json">%PORTFOLIO_STRUCTURED_DATA%</script>
     </head>
 
     <body
