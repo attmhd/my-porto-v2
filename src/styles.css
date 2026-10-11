@@ -1080,7 +1080,6 @@ a {
   border-radius: var(--dn-radius);
   background: var(--dn-surface-strong);
   padding: clamp(1.5rem, 3vw, 2.4rem);
-  box-shadow: 0 1rem 2.5rem var(--dn-shadow);
 }
 
 .dn-certificates li + li {
